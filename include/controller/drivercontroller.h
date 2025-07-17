@@ -15,6 +15,10 @@ public:
     void setDriverModel(QSharedPointer<DriverModel> newDriverModel);
     void start();
 
+public slots:
+    void refresh();
+    void clear();
+
 private:
     QSharedPointer<DriverModel> m_driverModel;
     QVector<DriverInfo> loadDrivers();

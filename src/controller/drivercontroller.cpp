@@ -23,6 +23,17 @@ void DriverController::start()
     m_driverModel->setDrivers(df);
 }
 
+void DriverController::refresh()
+{
+    start();
+}
+
+void DriverController::clear()
+{
+    if (m_driverModel)
+        m_driverModel->setDrivers({});
+}
+
 QVector<DriverInfo> DriverController::loadDrivers()
 {
     QVector<DriverInfo> drivers;

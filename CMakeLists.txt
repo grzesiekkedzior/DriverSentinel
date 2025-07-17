@@ -30,7 +30,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/model/drivermodel.h
         src/model/drivermodel.cpp
         include/controller/drivercontroller.h
-        src/model/drivercontroller.cpp
+
+        include/toolbar/drivertoolbar.h
+        src/toolbar/drivertoolbar.cpp
+        include/controller/drivercontroller.h include/data/driverinfo.h include/model/drivermodel.h include/toolbar/drivertoolbar.h src/controller/drivercontroller.cpp src/model/drivermodel.cpp src/toolbar/drivertoolbar.cpp
 
 
     )

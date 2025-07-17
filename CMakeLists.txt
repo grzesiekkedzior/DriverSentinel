@@ -19,11 +19,26 @@ set(PROJECT_SOURCES
         mainwindow.ui
 )
 
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(DriverSentinel
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        include/data/driverinfo.h
+        include/data/driverinfo.h
+        include/data/driverinfo.h
+        include/model/drivermodel.h
+        src/model/drivermodel.cpp
+        include/controller/drivercontroller.h
+        src/model/drivercontroller.cpp
+
+
     )
+target_include_directories(DriverSentinel
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/external
+)
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET DriverSentinel APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)

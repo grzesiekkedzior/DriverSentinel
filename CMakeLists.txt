@@ -12,6 +12,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
+set(CMAKE_PREFIX_PATH "C:/Program Files (x86)/LIEF/lib/cmake")
+find_package(LIEF REQUIRED COMPONENTS STATIC)
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
@@ -25,8 +28,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         include/data/driverinfo.h
-        include/data/driverinfo.h
-        include/data/driverinfo.h
         include/model/drivermodel.h
         src/model/drivermodel.cpp
         include/controller/drivercontroller.h
@@ -34,6 +35,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/toolbar/drivertoolbar.h
         src/toolbar/drivertoolbar.cpp
         include/controller/drivercontroller.h include/data/driverinfo.h include/model/drivermodel.h include/toolbar/drivertoolbar.h src/controller/drivercontroller.cpp src/model/drivermodel.cpp src/toolbar/drivertoolbar.cpp
+        include/data/generalinfo.h
+        include/controller/generalcontroller.h
+        src/controller/generalcontroller.cpp
 
 
     )
@@ -60,7 +64,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(DriverSentinel PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(DriverSentinel PRIVATE Qt${QT_VERSION_MAJOR}::Widgets LIEF::LIEF)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

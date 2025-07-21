@@ -3,14 +3,29 @@
 #include <QFileInfo>
 #include <LIEF/PE.hpp>
 
-GeneralController::GeneralController(QSharedPointer<GeneralInfo> generalInfo, QObject *parent)
+GeneralController::GeneralController(QSharedPointer<GeneralInfo> generalInfo,
+                                     QTableView *mainTableView,
+                                     QObject *parent)
     : m_generalInfo{generalInfo}
+    , m_mainTableView(mainTableView)
     , QObject{parent}
-{}
+{
+    connect(m_mainTableView, &QTableView::clicked, this, &GeneralController::loadGeneralInfo);
+}
 
 //For now this is the only expample function
-GeneralInfo GeneralController::loadGeneralInfo()
+GeneralInfo GeneralController::loadGeneralInfo(const QModelIndex &index)
 {
+    if (!index.isValid())
+        return {};
+
+    int row = index.row();
+
+    QModelIndex nameIndex = m_mainTableView->model()->index(row, 0);
+    QVariant nameData = m_mainTableView->model()->data(nameIndex, Qt::DisplayRole);
+
+    qDebug() << "First column:" << nameData.toString();
+
     QString filePath = "C:\\Windows\\System32\\hal.dll";
     GeneralInfo info;
     info.path = filePath;

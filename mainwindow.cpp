@@ -16,8 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     this->addToolBar(dt);
     connect(dt, &DriverToolbar::refreshRequested, dc, &DriverController::refresh);
     connect(dt, &DriverToolbar::clearRequested, dc, &DriverController::clear);
-    GeneralController *gc = new GeneralController(QSharedPointer<GeneralInfo>::create());
-    gc->loadGeneralInfo();
+    GeneralController *gc = new GeneralController(QSharedPointer<GeneralInfo>::create(),
+                                                  ui->mainTable);
+
     ui->mainTable->setModel(dc->getDriverModel().data());
 }
 

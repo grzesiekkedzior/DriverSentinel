@@ -19,6 +19,7 @@ public slots:
 private:
     QSharedPointer<GeneralInfo> m_generalInfo;
     QTableView *m_mainTableView{};
+    QVariant extractFileNameFromRow(const QModelIndex &index, int column);
 };
 
 #endif // GENERALCONTROLLER_H

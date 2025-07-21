@@ -11,7 +11,7 @@ struct GeneralInfo
     quint64 imageSize;
     QString checksum;
     QString fileVersion;
-    QString productVersion;
+    //QString productVersion;
     QDateTime compileTime;
     QString description;
     QString companyName;

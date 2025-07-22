@@ -6,16 +6,20 @@
 struct GeneralInfo
 {
     QString name;
+    QString internalName;
+    QString originalFilename;
+    QString productName;
+    QString legalCopyright;
     QString path;
     quint64 baseAddress;
-    quint64 imageSize;
+    quint64 virtualSize;
+    QString imageSize;
     QString checksum;
-    QString fileVersion;
-    //QString productVersion;
-    QDateTime compileTime;
-    QString description;
+    QString productVersion;
+    QString fileDescription;
+    QString fileType;
+    QString fileExtention;
     QString companyName;
-    QString originalFilename;
 };
 
 #endif // GENERALINFO_H

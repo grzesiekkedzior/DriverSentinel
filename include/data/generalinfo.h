@@ -5,7 +5,6 @@
 
 struct GeneralInfo
 {
-    QString name;
     QString internalName;
     QString originalFilename;
     QString productName;

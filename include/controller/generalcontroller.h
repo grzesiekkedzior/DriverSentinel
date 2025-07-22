@@ -2,10 +2,12 @@
 #define GENERALCONTROLLER_H
 #include <QObject>
 #include <QTableView>
-#include "data/driverinfo.h"
 #include "data/generalinfo.h"
-
 #include <LIEF/PE.hpp>
+
+namespace Ui {
+class MainWindow;
+}
 
 class GeneralController : public QObject
 {
@@ -14,6 +16,7 @@ class GeneralController : public QObject
 public:
     explicit GeneralController(QSharedPointer<GeneralInfo> generalInfo,
                                QTableView *mainTableView,
+                               Ui::MainWindow *ui,
                                QObject *parent = nullptr);
 public slots:
     GeneralInfo loadGeneralInfo(const QModelIndex &index);
@@ -21,12 +24,15 @@ public slots:
 private:
     QSharedPointer<GeneralInfo> m_generalInfo;
     QTableView *m_mainTableView{};
+    Ui::MainWindow *m_ui;
+
     QVariant extractFileNameFromRow(const QModelIndex &index, int column);
     QString extractFileVersion(const std::unique_ptr<LIEF::PE::Binary> &binary);
     QString getFileDescriptionFromWinAPI(const QString &filePath);
     QString getPEFormatString(LIEF::PE::PE_TYPE type);
     QString getPEFileExtention(const LIEF::PE::Binary &binary);
     QString getImageSize(QString filePath);
+    void loadGeneralDataToLabel(GeneralInfo gi);
 
     const char *CompanyName = "CompanyName";
     const char *FileDescription = "FileDescription";

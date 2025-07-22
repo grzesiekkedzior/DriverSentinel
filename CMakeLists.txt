@@ -21,7 +21,7 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.ui
 )
-
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${CMAKE_SOURCE_DIR})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(DriverSentinel

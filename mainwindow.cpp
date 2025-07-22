@@ -10,6 +10,16 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    start();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::start()
+{
     DriverController *dc = new DriverController(QSharedPointer<DriverModel>::create());
 
     DriverToolbar *dt = new DriverToolbar;
@@ -17,12 +27,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(dt, &DriverToolbar::refreshRequested, dc, &DriverController::refresh);
     connect(dt, &DriverToolbar::clearRequested, dc, &DriverController::clear);
     GeneralController *gc = new GeneralController(QSharedPointer<GeneralInfo>::create(),
-                                                  ui->mainTable);
+                                                  ui->mainTable,
+                                                  this->ui);
 
     ui->mainTable->setModel(dc->getDriverModel().data());
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
 }

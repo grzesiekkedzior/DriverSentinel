@@ -1,14 +1,16 @@
 #include "controller/generalcontroller.h"
-#include <Windows.h>
-
 #include <QDir>
 #include <QFileInfo>
+#include "ui_mainwindow.h"
+#include <Windows.h>
 
 GeneralController::GeneralController(QSharedPointer<GeneralInfo> generalInfo,
                                      QTableView *mainTableView,
+                                     Ui::MainWindow *ui,
                                      QObject *parent)
     : m_generalInfo{generalInfo}
     , m_mainTableView(mainTableView)
+    , m_ui{ui}
     , QObject{parent}
 {
     connect(m_mainTableView, &QTableView::clicked, this, &GeneralController::loadGeneralInfo);
@@ -125,6 +127,23 @@ QString GeneralController::getImageSize(QString filePath)
     return QString("%1 KB").arg(size / 1024);
 }
 
+void GeneralController::loadGeneralDataToLabel(GeneralInfo gi)
+{
+    m_ui->originalFilename_e->setText(gi.originalFilename);
+    m_ui->productName_e->setText(gi.productName);
+    m_ui->legalCopyright_e->setText(gi.legalCopyright);
+    m_ui->path_e->setText(gi.path);
+    m_ui->baseAddress_e->setText(QString::number(gi.baseAddress, 16).toUpper());
+    m_ui->virtualSize_e->setText(QString::number(gi.virtualSize));
+    m_ui->imageSize_e->setText(gi.imageSize);
+    m_ui->checksum_e->setText(gi.checksum);
+    m_ui->productVersion_e->setText(gi.productVersion);
+    m_ui->fileDescription_e->setText(gi.fileDescription);
+    m_ui->fileType_e->setText(gi.fileType);
+    m_ui->fileExtention_e->setText(gi.fileExtention);
+    m_ui->companyName_e->setText(gi.companyName);
+}
+
 //For now this is the only expample function
 GeneralInfo GeneralController::loadGeneralInfo(const QModelIndex &index)
 {
@@ -170,7 +189,6 @@ GeneralInfo GeneralController::loadGeneralInfo(const QModelIndex &index)
                     info.companyName = getValueOrEmpty(CompanyName);
                 }
             }
-            info.name = nameData.toString();
             info.baseAddress = binary->imagebase();
             info.virtualSize = binary->virtual_size();
             info.imageSize = getImageSize(filePath);
@@ -179,7 +197,6 @@ GeneralInfo GeneralController::loadGeneralInfo(const QModelIndex &index)
             info.fileExtention = getPEFileExtention(*binary);
 
             qDebug() << "==== PE File Info ====";
-            qDebug() << "Name:              " << info.name;
             qDebug() << "Internal Name:     " << info.internalName;
             qDebug() << "Original Filename: " << info.originalFilename;
             qDebug() << "Product Name:      " << info.productName;
@@ -195,6 +212,7 @@ GeneralInfo GeneralController::loadGeneralInfo(const QModelIndex &index)
             qDebug() << "File Type:         " << info.fileType;
             qDebug() << "File Extension:    " << info.fileExtention;
 
+            loadGeneralDataToLabel(info);
         } else {
             qWarning() << "LIEF: failed to parse binary";
         }

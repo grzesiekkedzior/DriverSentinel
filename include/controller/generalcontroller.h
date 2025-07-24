@@ -20,6 +20,7 @@ public:
                                QObject *parent = nullptr);
 public slots:
     void loadGeneralInfo(const QModelIndex &index);
+    void clear();
 
 private:
     QSharedPointer<GeneralInfo> m_generalInfo;

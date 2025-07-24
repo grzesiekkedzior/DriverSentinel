@@ -1,8 +1,10 @@
 #include "controller/drivercontroller.h"
+#include "ui_mainwindow.h"
 #include <psapi.h>
 
-DriverController::DriverController(QSharedPointer<DriverModel> driverModel)
+DriverController::DriverController(QSharedPointer<DriverModel> driverModel, Ui::MainWindow *ui)
     : m_driverModel(std::move(driverModel))
+    , m_ui{ui}
 {}
 
 QSharedPointer<DriverModel> DriverController::getDriverModel() const

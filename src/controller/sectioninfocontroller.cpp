@@ -1,33 +1,48 @@
 #include "controller/sectioninfocontroller.h"
+#include "ui_mainwindow.h"
 #include <LIEF/PE.hpp>
 
+// The user selects a row in the main table
+// → currentRowChanged(index) is emitted
+// → loadPESectionDataToView(index) is called
+// → the data is parsed and stored in m_sectionVectorInfo
+// → updateModel() is called → the data is passed to the model → the view gets updated
 SectionInfoController::SectionInfoController(QSharedPointer<SectionInfo> sectionInfo,
                                              QTableView *mainTableView,
                                              Ui::MainWindow *ui,
                                              QObject *parent)
     : m_sectionInfo{sectionInfo}
-    , m_mainTableView{mainTableView}
     , m_ui{ui}
+    , m_mainTableView{mainTableView}
 {
     m_sectionInfoModel = QSharedPointer<SectionInfoModel>::create();
+    m_ui->peSectionView->setModel(this->sectionInfoModel().data());
+    m_ui->peSectionView->resizeColumnsToContents();
 }
 
-void SectionInfoController::start()
+void SectionInfoController::updateModel()
 {
     if (!m_sectionInfoModel)
         return;
     m_sectionInfoModel->setPESecton(m_sectionVectorInfo);
 }
 
-QVariant SectionInfoController::SectionInfoController::extractFileNameFromRow(
-    const QModelIndex &index, int column)
+QVariant SectionInfoController::extractFileNameFromRow(const QModelIndex &index, int column)
 {
-    int row = index.row();
+    if (!m_mainTableView || !m_mainTableView->model() || !index.isValid())
+        return {};
 
-    QModelIndex nameIndex = m_mainTableView->model()->index(row, column);
-    QVariant nameData = m_mainTableView->model()->data(nameIndex, Qt::DisplayRole);
+    QModelIndex nameIndex = m_mainTableView->model()->index(index.row(), column);
+    return m_mainTableView->model()->data(nameIndex, Qt::DisplayRole);
+}
 
-    return nameData;
+QString SectionInfoController::getPEfilePath(const QModelIndex &index)
+{
+    QVariant nameData = extractFileNameFromRow(index, 0);
+    QString filePath = extractFileNameFromRow(index, 1).toString();
+    filePath.replace(SystemRoot, C_WindowsPath);
+
+    return filePath;
 }
 
 void SectionInfoController::loadPESectionDataToView(const QModelIndex &index)
@@ -36,9 +51,12 @@ void SectionInfoController::loadPESectionDataToView(const QModelIndex &index)
     if (!index.isValid())
         return;
 
-    QVariant nameData = extractFileNameFromRow(index, 0);
-    QString filePath = extractFileNameFromRow(index, 1).toString();
-    filePath.replace("\\SystemRoot", "C:\\Windows");
+    QString filePath = getPEfilePath(index);
+
+    if (filePath.isEmpty()) {
+        qWarning() << "File path is empty";
+        return;
+    }
 
     try {
         std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(filePath.toStdString());
@@ -69,12 +87,16 @@ void SectionInfoController::loadPESectionDataToView(const QModelIndex &index)
     }
 
     m_sectionVectorInfo = sectionInfoLocal;
-    start();
+    updateModel();
 }
 
 void SectionInfoController::refresh() {}
 
-void SectionInfoController::clear() {}
+void SectionInfoController::clear()
+{
+    if (m_sectionInfoModel)
+        m_sectionInfoModel->setPESecton({});
+}
 
 QSharedPointer<SectionInfoModel> SectionInfoController::sectionInfoModel() const
 {

@@ -24,7 +24,7 @@ public slots:
     void loadPESectionDataToView(const QModelIndex &index);
     void refresh();
     void clear();
-    void start();
+    void updateModel();
 
 private:
     QSharedPointer<SectionInfo> m_sectionInfo;
@@ -33,7 +33,11 @@ private:
     Ui::MainWindow *m_ui;
     QVector<SectionInfo> m_sectionVectorInfo;
 
+    const QString SystemRoot = "\\SystemRoot";
+    const QString C_WindowsPath = "C:\\Windows";
+
     QVariant extractFileNameFromRow(const QModelIndex &index, int column);
+    QString getPEfilePath(const QModelIndex &index);
 };
 
 #endif // SECTIONINFOCONTROLLER_H

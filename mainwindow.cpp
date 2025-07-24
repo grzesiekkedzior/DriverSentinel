@@ -21,23 +21,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::start()
 {
-    DriverController *dc = new DriverController(QSharedPointer<DriverModel>::create());
+    DriverController *dc = new DriverController(QSharedPointer<DriverModel>::create(), this->ui);
 
     DriverToolbar *dt = new DriverToolbar;
     this->addToolBar(dt);
-    connect(dt, &DriverToolbar::refreshRequested, dc, &DriverController::refresh);
-    connect(dt, &DriverToolbar::clearRequested, dc, &DriverController::clear);
 
     GeneralController *gc = new GeneralController(QSharedPointer<GeneralInfo>::create(),
                                                   ui->mainTable,
                                                   this->ui);
     SectionInfoController *sc = new SectionInfoController(QSharedPointer<SectionInfo>::create(),
                                                           ui->mainTable,
-                                                          this->ui);
+                                                          ui);
+    connect(dt, &DriverToolbar::refreshRequested, dc, &DriverController::refresh);
+    connect(dt, &DriverToolbar::clearRequested, dc, &DriverController::clear);
     connect(ui->mainTable,
             &QTableView::clicked,
             sc,
             &SectionInfoController::loadPESectionDataToView);
+    connect(dt, &DriverToolbar::clearRequested, sc, &SectionInfoController::clear);
+    connect(dt, &DriverToolbar::clearRequested, gc, &GeneralController::clear);
     ui->mainTable->setModel(dc->getDriverModel().data());
     ui->peSectionView->setModel(sc->sectionInfoModel().data());
+
+    ui->peSectionView->setModel(sc->sectionInfoModel().data());
+    ui->peSectionView->resizeColumnsToContents();
 }

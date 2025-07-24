@@ -223,3 +223,20 @@ void GeneralController::loadGeneralInfo(const QModelIndex &index)
         qWarning() << "Unknown error while parsing PE";
     }
 }
+
+void GeneralController::clear()
+{
+    m_ui->originalFilename_e->clear();
+    m_ui->productName_e->clear();
+    m_ui->legalCopyright_e->clear();
+    m_ui->path_e->clear();
+    m_ui->baseAddress_e->clear();
+    m_ui->virtualSize_e->clear();
+    m_ui->imageSize_e->clear();
+    m_ui->checksum_e->clear();
+    m_ui->productVersion_e->clear();
+    m_ui->fileDescription_e->clear();
+    m_ui->fileType_e->clear();
+    m_ui->fileExtention_e->clear();
+    m_ui->companyName_e->clear();
+}

@@ -12,14 +12,18 @@ public:
 
     // QAbstractItemModel interface
     enum class SectionColumn {
-        Name,                // Section name, e.g., ".text"
-        VirtualAddress,      // RVA (Relative Virtual Address)
-        VirtualSize,         // Virtual size
-        RawSize,             // Raw size in file
-        PointerToRawData,    // Offset in file
-        Characteristics,     // Hex flags
-        CharacteristicsDesc, // Decoded characteristics (optional, readable form)
-        Count                // Used to get total number of columns
+        Name,                 // QString name
+        VirtualAddress,       // QString virtualAddress
+        VirtualSize,          // QString virtualSize
+        RawSize,              // QString rawSize
+        PointerToRawData,     // QString pointerToRawData
+        Characteristics,      // QString characteristics (hex)
+        Entropy,              // QString entropy
+        SectionAlignment,     // QString sectionAlignment
+        PointerToRelocations, // QString pointerToRelocations
+        NumberOfRelocations,  // QString numberOfRelocations
+        CharacteristicsDesc,  // QString characteristicsDesc (decoded description)
+        Count
     };
 
 public:

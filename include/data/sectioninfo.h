@@ -1,5 +1,6 @@
 #ifndef SECTIONINFO_H
 #define SECTIONINFO_H
+
 #include <QString>
 #include <QStringList>
 
@@ -21,34 +22,51 @@
 // 0x00200000 (IMAGE_SCN_LNK_INFO)                      → Section contains COFF linker metadata.
 // 0x00000200 (IMAGE_SCN_LNK_REMOVE)                    → Section will not be part of the final image.
 // -----------------------------------------------
+
 struct SectionInfo
 {
-    QString name;             // Section name, e.g. ".text"
-    QString virtualAddress;   // Virtual address (RVA), e.g. "0x1000"
-    QString virtualSize;      // Virtual size, e.g. "0x2000"
-    QString rawSize;          // Raw size in file, e.g. "0x1000"
-    QString pointerToRawData; // File offset to raw data, e.g. "0x400"
-    QString characteristics;  // Section flags in hex, e.g. "0x60000020"
+    QString name;                 // Section name, e.g. ".text"
+    QString virtualAddress;       // Virtual address (RVA), e.g. "0x1000"
+    QString virtualSize;          // Virtual size, e.g. "0x2000"
+    QString rawSize;              // Raw size in file, e.g. "0x1000"
+    QString pointerToRawData;     // File offset to raw data, e.g. "0x400"
+    QString characteristics;      // Section flags in hex, e.g. "0x60000020"
+    QString entropy;              // Entropy of section, e.g. "6.21"
+    QString sectionAlignment;     // Section alignment (optional)
+    QString pointerToRelocations; // Offset to relocations (if any)
+    QString numberOfRelocations;  // Number of relocations (if any)
+    QString characteristicsDesc;  // Decoded characteristics (cached if needed)
 
-    // Decode characteristics flags to human-readable form
-    // IMAGE_SECTION_HEADER.Characteristics
     QString characteristicsDescription() const
     {
         quint32 flags = characteristics.toUInt(nullptr, 16);
         QStringList flagNames;
 
+        // Content flags
         if (flags & 0x00000020)
             flagNames << "CODE";
         if (flags & 0x00000040)
             flagNames << "INITIALIZED_DATA";
         if (flags & 0x00000080)
             flagNames << "UNINITIALIZED_DATA";
+
+        // Memory permissions
         if (flags & 0x20000000)
             flagNames << "EXECUTE";
         if (flags & 0x40000000)
             flagNames << "READ";
         if (flags & 0x80000000)
             flagNames << "WRITE";
+
+        // Other flags
+        if (flags & 0x02000000)
+            flagNames << "DISCARDABLE";
+        if (flags & 0x10000000)
+            flagNames << "SHARED";
+        if (flags & 0x00200000)
+            flagNames << "LINK_INFO";
+        if (flags & 0x00000200)
+            flagNames << "LINK_REMOVE";
 
         return flagNames.join(", ");
     }

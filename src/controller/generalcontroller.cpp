@@ -1,6 +1,7 @@
 #include "controller/generalcontroller.h"
 #include <QDir>
 #include <QFileInfo>
+#include "data/sectioninfo.h"
 #include "ui_mainwindow.h"
 #include <Windows.h>
 

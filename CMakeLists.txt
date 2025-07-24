@@ -41,6 +41,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/data/sectioninfo.h
         include/model/sectioninfomodel.h
         src/model/sectioninfomodel.cpp
+        include/controller/sectioninfocontroller.h
+        src/controller/sectioninfocontroller.cpp
 
 
     )

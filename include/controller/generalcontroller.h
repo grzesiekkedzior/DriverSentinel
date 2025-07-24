@@ -19,7 +19,7 @@ public:
                                Ui::MainWindow *ui,
                                QObject *parent = nullptr);
 public slots:
-    GeneralInfo loadGeneralInfo(const QModelIndex &index);
+    void loadGeneralInfo(const QModelIndex &index);
 
 private:
     QSharedPointer<GeneralInfo> m_generalInfo;

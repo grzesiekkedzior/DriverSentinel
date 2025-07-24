@@ -146,10 +146,10 @@ void GeneralController::loadGeneralDataToLabel(GeneralInfo gi)
 }
 
 //For now this is the only expample function
-GeneralInfo GeneralController::loadGeneralInfo(const QModelIndex &index)
+void GeneralController::loadGeneralInfo(const QModelIndex &index)
 {
     if (!index.isValid())
-        return {};
+        return;
 
     QVariant nameData = extractFileNameFromRow(index, 0);
     QString filePath = extractFileNameFromRow(index, 1).toString();
@@ -222,6 +222,4 @@ GeneralInfo GeneralController::loadGeneralInfo(const QModelIndex &index)
     } catch (...) {
         qWarning() << "Unknown error while parsing PE";
     }
-
-    return info;
 }

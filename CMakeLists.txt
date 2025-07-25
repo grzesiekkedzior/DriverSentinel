@@ -43,6 +43,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/model/sectioninfomodel.cpp
         include/controller/sectioninfocontroller.h
         src/controller/sectioninfocontroller.cpp
+        include/data/certificateinfo.h
+        include/model/certificatemodel.h
+        src/model/certificatemodel.cpp
 
 
     )

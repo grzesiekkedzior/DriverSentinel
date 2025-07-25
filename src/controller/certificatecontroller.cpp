@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <LIEF/PE/signature/RsaInfo.hpp>
 #include <LIEF/PE/signature/x509.hpp>
+#include <utils/peutils.h>
 
 CertificateController::CertificateController(QSharedPointer<CertificateInfo> certificateInfo,
                                              QTableView *mainTableView,
@@ -10,7 +11,7 @@ CertificateController::CertificateController(QSharedPointer<CertificateInfo> cer
     : QObject(parent)
     , m_certificateInfo(std::move(certificateInfo))
     , m_mainTableView(mainTableView)
-    , ui(ui)
+    , m_ui(ui)
 {
     m_certificateModel = QSharedPointer<CertificateModel>::create();
 }
@@ -37,7 +38,7 @@ void CertificateController::loadCertificateDataToView(const QModelIndex &index)
     if (!index.isValid())
         return;
 
-    QString filePath = getPEfilePath(index);
+    QString filePath = PEUtils::getPEfilePath(m_ui->mainTable, index);
 
     if (filePath.isEmpty()) {
         qWarning() << "File path is empty";
@@ -104,24 +105,6 @@ void CertificateController::clear()
 {
     if (m_certificateModel)
         m_certificateModel->setCertificateInfo({});
-}
-
-QVariant CertificateController::extractFileNameFromRow(const QModelIndex &index, int column)
-{
-    if (!m_mainTableView || !m_mainTableView->model() || !index.isValid())
-        return {};
-
-    QModelIndex nameIndex = m_mainTableView->model()->index(index.row(), column);
-    return m_mainTableView->model()->data(nameIndex, Qt::DisplayRole);
-}
-
-QString CertificateController::getPEfilePath(const QModelIndex &index)
-{
-    QVariant nameData = extractFileNameFromRow(index, 0);
-    QString filePath = extractFileNameFromRow(index, 1).toString();
-    filePath.replace(SystemRoot, C_WindowsPath);
-
-    return filePath;
 }
 
 QString CertificateController::toHexString(const std::vector<uint8_t> &data)

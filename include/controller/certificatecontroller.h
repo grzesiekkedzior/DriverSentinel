@@ -31,13 +31,8 @@ private:
     QSharedPointer<CertificateInfo> m_certificateInfo;
     QSharedPointer<CertificateModel> m_certificateModel;
     QTableView *m_mainTableView{};
-    Ui::MainWindow *ui;
+    Ui::MainWindow *m_ui;
 
-    const QString SystemRoot = "\\SystemRoot";
-    const QString C_WindowsPath = "C:\\Windows";
-
-    QVariant extractFileNameFromRow(const QModelIndex &index, int column);
-    QString getPEfilePath(const QModelIndex &index);
     QString toHexString(const std::vector<uint8_t> &data);
     QString toHexColonString(const std::vector<uint8_t> &data);
     QString formatKeyUsage(const LIEF::PE::x509 &cert);

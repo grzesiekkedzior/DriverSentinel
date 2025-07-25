@@ -27,7 +27,6 @@ private:
     QTableView *m_mainTableView{};
     Ui::MainWindow *m_ui;
 
-    QVariant extractFileNameFromRow(const QModelIndex &index, int column);
     QString extractFileVersion(const std::unique_ptr<LIEF::PE::Binary> &binary);
     QString getFileDescriptionFromWinAPI(const QString &filePath);
     QString getPEFormatString(LIEF::PE::PE_TYPE type);

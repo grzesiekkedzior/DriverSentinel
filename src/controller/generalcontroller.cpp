@@ -4,6 +4,7 @@
 #include "data/sectioninfo.h"
 #include "ui_mainwindow.h"
 #include <Windows.h>
+#include <utils/peutils.h>
 
 GeneralController::GeneralController(QSharedPointer<GeneralInfo> generalInfo,
                                      QTableView *mainTableView,
@@ -15,16 +16,6 @@ GeneralController::GeneralController(QSharedPointer<GeneralInfo> generalInfo,
     , QObject{parent}
 {
     connect(m_mainTableView, &QTableView::clicked, this, &GeneralController::loadGeneralInfo);
-}
-
-QVariant GeneralController::extractFileNameFromRow(const QModelIndex &index, int column)
-{
-    int row = index.row();
-
-    QModelIndex nameIndex = m_mainTableView->model()->index(row, column);
-    QVariant nameData = m_mainTableView->model()->data(nameIndex, Qt::DisplayRole);
-
-    return nameData;
 }
 
 //Unused
@@ -151,9 +142,7 @@ void GeneralController::loadGeneralInfo(const QModelIndex &index)
     if (!index.isValid())
         return;
 
-    QVariant nameData = extractFileNameFromRow(index, 0);
-    QString filePath = extractFileNameFromRow(index, 1).toString();
-    filePath.replace("\\SystemRoot", "C:\\Windows");
+    QString filePath = PEUtils::getPEfilePath(m_ui->mainTable, index);
 
     GeneralInfo info;
 

@@ -30,12 +30,6 @@ private:
     QSharedPointer<SectionInfoModel> m_sectionInfoModel;
     QTableView *m_mainTableView{};
     Ui::MainWindow *m_ui;
-
-    const QString SystemRoot = "\\SystemRoot";
-    const QString C_WindowsPath = "C:\\Windows";
-
-    QVariant extractFileNameFromRow(const QModelIndex &index, int column);
-    QString getPEfilePath(const QModelIndex &index);
 };
 
 #endif // SECTIONINFOCONTROLLER_H

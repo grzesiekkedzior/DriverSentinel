@@ -1,6 +1,7 @@
 #include "controller/sectioninfocontroller.h"
 #include "ui_mainwindow.h"
 #include <LIEF/PE.hpp>
+#include <utils/peutils.h>
 
 // The user selects a row in the main table
 // → currentRowChanged(index) is emitted
@@ -27,31 +28,13 @@ void SectionInfoController::updateModel(const QVector<SectionInfo> &sectionInfo)
     m_sectionInfoModel->setPESecton(sectionInfo);
 }
 
-QVariant SectionInfoController::extractFileNameFromRow(const QModelIndex &index, int column)
-{
-    if (!m_mainTableView || !m_mainTableView->model() || !index.isValid())
-        return {};
-
-    QModelIndex nameIndex = m_mainTableView->model()->index(index.row(), column);
-    return m_mainTableView->model()->data(nameIndex, Qt::DisplayRole);
-}
-
-QString SectionInfoController::getPEfilePath(const QModelIndex &index)
-{
-    QVariant nameData = extractFileNameFromRow(index, 0);
-    QString filePath = extractFileNameFromRow(index, 1).toString();
-    filePath.replace(SystemRoot, C_WindowsPath);
-
-    return filePath;
-}
-
 void SectionInfoController::loadPESectionDataToView(const QModelIndex &index)
 {
     QVector<SectionInfo> sectionInfoLocal;
     if (!index.isValid())
         return;
 
-    QString filePath = getPEfilePath(index);
+    QString filePath = PEUtils::getPEfilePath(m_ui->mainTable, index);
 
     if (filePath.isEmpty()) {
         qWarning() << "File path is empty";

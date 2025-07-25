@@ -22,7 +22,8 @@ public:
         FingerprintSHA256,
         KeyUsage,
         Version,
-        PublicKeyHex,
+        KeyType,
+        ExtendedKeyUsage,
         Count
     };
 

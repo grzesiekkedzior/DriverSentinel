@@ -22,16 +22,14 @@ public:
 
 public slots:
     void loadPESectionDataToView(const QModelIndex &index);
-    void refresh();
     void clear();
-    void updateModel();
+    void updateModel(const QVector<SectionInfo> &sectionInfo);
 
 private:
     QSharedPointer<SectionInfo> m_sectionInfo;
     QSharedPointer<SectionInfoModel> m_sectionInfoModel;
     QTableView *m_mainTableView{};
     Ui::MainWindow *m_ui;
-    QVector<SectionInfo> m_sectionVectorInfo;
 
     const QString SystemRoot = "\\SystemRoot";
     const QString C_WindowsPath = "C:\\Windows";

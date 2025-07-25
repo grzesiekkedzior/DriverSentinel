@@ -20,11 +20,11 @@ SectionInfoController::SectionInfoController(QSharedPointer<SectionInfo> section
     m_ui->peSectionView->resizeColumnsToContents();
 }
 
-void SectionInfoController::updateModel()
+void SectionInfoController::updateModel(const QVector<SectionInfo> &sectionInfo)
 {
     if (!m_sectionInfoModel)
         return;
-    m_sectionInfoModel->setPESecton(m_sectionVectorInfo);
+    m_sectionInfoModel->setPESecton(sectionInfo);
 }
 
 QVariant SectionInfoController::extractFileNameFromRow(const QModelIndex &index, int column)
@@ -86,11 +86,8 @@ void SectionInfoController::loadPESectionDataToView(const QModelIndex &index)
         qWarning() << "Unknown error while parsing PE";
     }
 
-    m_sectionVectorInfo = sectionInfoLocal;
-    updateModel();
+    updateModel(sectionInfoLocal);
 }
-
-void SectionInfoController::refresh() {}
 
 void SectionInfoController::clear()
 {

@@ -14,7 +14,8 @@ struct CertificateInfo
     QString fingerprintSHA256;
     QString keyUsage;
     int version;
-    QString publicKeyHex;
+    QString keyType;
+    QString extendedKeyUsage;
 };
 
 #endif // CERTIFICATEINFO_H

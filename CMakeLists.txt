@@ -46,6 +46,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/data/certificateinfo.h
         include/model/certificatemodel.h
         src/model/certificatemodel.cpp
+        include/controller/certificatecontroller.h
+        src/controller/certificatecontroller.cpp
 
 
     )

@@ -39,7 +39,7 @@
       </widget>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="general">
         <attribute name="title">
@@ -266,7 +266,17 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
-          <layout class="QFormLayout" name="formLayout_3"/>
+          <widget class="QTableView" name="certificateTableView">
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+           <attribute name="horizontalHeaderVisible">
+            <bool>true</bool>
+           </attribute>
+           <attribute name="horizontalHeaderStretchLastSection">
+            <bool>true</bool>
+           </attribute>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -306,7 +316,7 @@
      <x>0</x>
      <y>0</y>
      <width>890</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

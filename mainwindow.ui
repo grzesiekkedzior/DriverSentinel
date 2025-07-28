@@ -39,7 +39,7 @@
       </widget>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>2</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="general">
         <attribute name="title">
@@ -286,7 +286,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <widget class="QTableView" name="tableView_2"/>
+          <widget class="QTreeView" name="treeImportsView"/>
          </item>
         </layout>
        </widget>
@@ -316,7 +316,7 @@
      <x>0</x>
      <y>0</y>
      <width>890</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

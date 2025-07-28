@@ -50,6 +50,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/controller/certificatecontroller.cpp
         include/utils/peutils.h
         src/utils/peutils.cpp
+        include/data/treeimportsitem.h
+        src/data/treeimportsitem.cpp
+        include/model/treeimportsmodel.h
+        src/model/treeimportsmodel.cpp
+        include/controller/treeimportscontroller.h
+        src/controller/treeimportscontroller.cpp
 
 
 

@@ -6,6 +6,7 @@
 #include "controller/generalcontroller.h"
 #include "controller/sectioninfocontroller.h"
 #include "toolbar/drivertoolbar.h"
+#include <controller/treeimportscontroller.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -36,6 +37,9 @@ void MainWindow::start()
     CertificateController *cc = new CertificateController(QSharedPointer<CertificateInfo>::create(),
                                                           ui->mainTable,
                                                           ui);
+    TreeImportsController *tc = new TreeImportsController(QSharedPointer<TreeImportsItem>::create(),
+                                                          ui->treeImportsView,
+                                                          ui);
     connect(dt, &DriverToolbar::refreshRequested, dc, &DriverController::refresh);
     connect(dt, &DriverToolbar::clearRequested, dc, &DriverController::clear);
     connect(ui->mainTable,
@@ -46,12 +50,18 @@ void MainWindow::start()
             &QTableView::clicked,
             cc,
             &CertificateController::loadCertificateDataToView);
+
+    connect(ui->mainTable, &QTableView::clicked, tc, &TreeImportsController::loadImportsDataToView);
+
     connect(dt, &DriverToolbar::clearRequested, sc, &SectionInfoController::clear);
     connect(dt, &DriverToolbar::clearRequested, gc, &GeneralController::clear);
     connect(dt, &DriverToolbar::clearRequested, cc, &CertificateController::clear);
+    connect(dt, &DriverToolbar::clearRequested, tc, &TreeImportsController::clear);
     ui->mainTable->setModel(dc->getDriverModel().data());
     ui->peSectionView->setModel(sc->sectionInfoModel().data());
 
     ui->certificateTableView->setModel(cc->certificateModel().data());
     ui->peSectionView->resizeColumnsToContents();
+
+    ui->treeImportsView->setModel(tc->treeImportsModel().data());
 }

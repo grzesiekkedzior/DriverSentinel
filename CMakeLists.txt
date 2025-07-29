@@ -56,6 +56,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/model/treeimportsmodel.cpp
         include/controller/treeimportscontroller.h
         src/controller/treeimportscontroller.cpp
+        include/data/functioninfo.h
 
 
 

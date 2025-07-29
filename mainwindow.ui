@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
@@ -39,7 +39,7 @@
       </widget>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="general">
         <attribute name="title">
@@ -284,36 +284,42 @@
         <attribute name="title">
          <string>Imports</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_5">
+        <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QTreeView" name="treeImportsView">
-           <property name="styleSheet">
-            <string notr="true">QTreeView {
+          <widget class="QSplitter" name="splitter_2">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <widget class="QTreeView" name="treeImportsView">
+            <property name="styleSheet">
+             <string notr="true">QTreeView {
     background-color: white;
 }
 </string>
-           </property>
-           <property name="frameShape">
-            <enum>QFrame::Shape::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Shadow::Sunken</enum>
-           </property>
-           <property name="autoExpandDelay">
-            <number>-1</number>
-           </property>
-           <property name="uniformRowHeights">
-            <bool>false</bool>
-           </property>
-           <property name="animated">
-            <bool>true</bool>
-           </property>
-           <property name="allColumnsShowFocus">
-            <bool>false</bool>
-           </property>
-           <attribute name="headerVisible">
-            <bool>false</bool>
-           </attribute>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Shape::StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Shadow::Sunken</enum>
+            </property>
+            <property name="autoExpandDelay">
+             <number>-1</number>
+            </property>
+            <property name="uniformRowHeights">
+             <bool>false</bool>
+            </property>
+            <property name="animated">
+             <bool>true</bool>
+            </property>
+            <property name="allColumnsShowFocus">
+             <bool>false</bool>
+            </property>
+            <attribute name="headerVisible">
+             <bool>false</bool>
+            </attribute>
+           </widget>
+           <widget class="QTableView" name="treeTableView"/>
           </widget>
          </item>
         </layout>

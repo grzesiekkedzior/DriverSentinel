@@ -39,7 +39,7 @@
       </widget>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>3</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="general">
         <attribute name="title">
@@ -286,7 +286,35 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <widget class="QTreeView" name="treeImportsView"/>
+          <widget class="QTreeView" name="treeImportsView">
+           <property name="styleSheet">
+            <string notr="true">QTreeView {
+    background-color: white;
+}
+</string>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::Shape::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Shadow::Sunken</enum>
+           </property>
+           <property name="autoExpandDelay">
+            <number>-1</number>
+           </property>
+           <property name="uniformRowHeights">
+            <bool>false</bool>
+           </property>
+           <property name="animated">
+            <bool>true</bool>
+           </property>
+           <property name="allColumnsShowFocus">
+            <bool>false</bool>
+           </property>
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -316,7 +344,7 @@
      <x>0</x>
      <y>0</y>
      <width>890</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

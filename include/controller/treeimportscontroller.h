@@ -29,6 +29,15 @@ private:
     QSharedPointer<TreeImportsModel> m_treeImportsModel;
     QTreeView *m_treeView{};
     Ui::MainWindow *m_ui;
+    const char *SystemRoot = "C:/Windows";
+    const char *System32 = "System32";
+
+    void buildImportsRecursive(const std::string &filePath,
+                               std::set<std::string> &visited,
+                               TreeImportsItem *parentItem);
+
+    bool starts_with(const std::string &str, const std::string &prefix);
+    std::string findDLLPath(const std::string &dllName, const std::string &filePath);
 };
 
 #endif // TREEIMPORTSCONTROLLER_H

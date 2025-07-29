@@ -45,6 +45,7 @@ int TreeImportsModel::rowCount(const QModelIndex &parent) const
 
 int TreeImportsModel::columnCount(const QModelIndex &parent) const
 {
+    // For now flat model
     Q_UNUSED(parent);
     return m_rootItem->columnCount();
 }

@@ -5,15 +5,28 @@
 
 struct FunctionInfo
 {
-    QString name;                 // Function name (if available)
-    uint32_t ordinal = 0;         // Ordinal number of the function
-    uint32_t rva = 0;             // Relative Virtual Address of the function
-    uint32_t thunk_rva = 0;       // RVA of the thunk (usually in Import Address Table)
-    bool isForwarded = false;     // Indicates if the function is forwarded to another DLL
-    QString forwarder;            // Forwarder string (name of the forwarded function, if any)
-    bool importByOrdinal = false; // True if the import is done by ordinal (no name)
-    uint16_t hint;                // Index hint to speed up function lookup by name
-    QString dllName;              // Name of the DLL (for imported functions)
+    QString dllName;
+    QString functionName;
+    bool isImport = false;
+    bool isExport = false;
+    bool isForwarded = false;
+    QString forwardInfo; // SYMKRP.DLL.SomeFunction
+
+    // Imports
+    uint64_t iatAddress = 0;
+    uint64_t iatValue = 0;
+    uint64_t iltValue = 0;
+    bool isOrdinal = false;
+    uint16_t hint = 0;
+    uint64_t hintNameRVA = 0;
+    uint64_t entryData = 0;
+    uint16_t importOrdinal = 0;
+
+    // Exports
+    uint64_t functionRVA = 0;
+    uint64_t address = 0;
+    bool isExtern = false;
+    uint16_t exportOrdinal = 0;
 };
 
 #endif // FUNCTIONINFO_H

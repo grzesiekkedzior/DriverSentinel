@@ -3,10 +3,11 @@
 #include "./ui_mainwindow.h"
 #include "controller/certificatecontroller.h"
 #include "controller/drivercontroller.h"
+#include "controller/functioninfocontroller.h"
 #include "controller/generalcontroller.h"
 #include "controller/sectioninfocontroller.h"
+#include "controller/treeimportscontroller.h"
 #include "toolbar/drivertoolbar.h"
-#include <controller/treeimportscontroller.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -40,6 +41,8 @@ void MainWindow::start()
     TreeImportsController *tc = new TreeImportsController(QSharedPointer<TreeImportsItem>::create(),
                                                           ui->treeImportsView,
                                                           ui);
+    FunctionInfoController *fc = new FunctionInfoController(QSharedPointer<FunctionInfo>::create(),
+                                                            ui);
     connect(dt, &DriverToolbar::refreshRequested, dc, &DriverController::refresh);
     connect(dt, &DriverToolbar::clearRequested, dc, &DriverController::clear);
     connect(ui->mainTable,
@@ -57,6 +60,10 @@ void MainWindow::start()
     connect(dt, &DriverToolbar::clearRequested, gc, &GeneralController::clear);
     connect(dt, &DriverToolbar::clearRequested, cc, &CertificateController::clear);
     connect(dt, &DriverToolbar::clearRequested, tc, &TreeImportsController::clear);
+
+    connect(ui->treeImportsView, &QTreeView::clicked, tc, &TreeImportsController::onTreeItemClicked);
+    connect(tc, &TreeImportsController::dllSelected, fc, &FunctionInfoController::onDllSelected);
+
     ui->mainTable->setModel(dc->getDriverModel().data());
     ui->peSectionView->setModel(sc->sectionInfoModel().data());
 

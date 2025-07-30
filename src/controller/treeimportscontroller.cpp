@@ -111,3 +111,14 @@ QSharedPointer<TreeImportsModel> TreeImportsController::treeImportsModel() const
 {
     return m_treeImportsModel;
 }
+
+void TreeImportsController::onTreeItemClicked(const QModelIndex &index)
+{
+    auto item = static_cast<TreeImportsItem *>(index.parent().internalPointer());
+    if (!item)
+        return;
+
+    QString dllName = item->data(0).toString();
+    qDebug() << "[Tree] Emitting signal with:" << dllName;
+    emit dllSelected(dllName);
+}

@@ -20,6 +20,9 @@ public:
     QSharedPointer<TreeImportsModel> treeImportsModel() const;
 
     void updateModel(std::unique_ptr<TreeImportsItem> root);
+    void onTreeItemClicked(const QModelIndex &index);
+signals:
+    void dllSelected(const QString &dllName);
 public slots:
     void loadImportsDataToView(const QModelIndex &index);
     void clear();

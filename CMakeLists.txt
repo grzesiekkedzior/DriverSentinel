@@ -59,6 +59,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/data/functioninfo.h
         include/model/functioninfomodel.h
         src/model/functioninfomodel.cpp
+        include/controller/functioninfocontroller.h
+        src/controller/functioninfocontroller.cpp
 
 
 

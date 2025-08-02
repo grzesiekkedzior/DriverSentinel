@@ -133,7 +133,7 @@ QVariant FunctionInfoModel::headerData(int section, Qt::Orientation orientation,
 void FunctionInfoModel::setFunInfoSection(const QVector<FunctionInfo> &fi)
 {
     beginResetModel();
-    m_functionInfo = std::move(fi);
+    m_functionInfo = fi;
     endResetModel();
 }
 

@@ -63,6 +63,10 @@ void MainWindow::start()
 
     connect(ui->treeImportsView, &QTreeView::clicked, tc, &TreeImportsController::onTreeItemClicked);
     connect(tc, &TreeImportsController::dllSelected, fc, &FunctionInfoController::onDllSelected);
+    connect(ui->treeImportsView,
+            &QTreeView::clicked,
+            fc,
+            &FunctionInfoController::loadFunctionInfoToView);
 
     ui->mainTable->setModel(dc->getDriverModel().data());
     ui->peSectionView->setModel(sc->sectionInfoModel().data());
@@ -71,4 +75,5 @@ void MainWindow::start()
     ui->peSectionView->resizeColumnsToContents();
 
     ui->treeImportsView->setModel(tc->treeImportsModel().data());
+    ui->treeTableView->setModel(fc->functionInfoModel().data());
 }

@@ -29,6 +29,9 @@ private:
     QSharedPointer<FunctionInfo> m_functionInfo;
     QSharedPointer<FunctionInfoModel> m_functionInfoModel;
     Ui::MainWindow *m_ui;
+    QString m_dllName{};
+    QString m_system32{"C:/Windows/System32/"};
+    QString m_drivers{"C:/Windows/System32/drivers/"};
 };
 
 #endif // FUNCTIONINFOCONTROLLER_H

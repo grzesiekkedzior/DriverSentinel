@@ -34,6 +34,7 @@ private:
     Ui::MainWindow *m_ui;
     const char *SystemRoot = "C:/Windows";
     const char *System32 = "System32";
+    const char *System32Drivers = "C:Windows/System32/drivers";
 
     void buildImportsRecursive(const std::string &filePath,
                                std::set<std::string> &visited,

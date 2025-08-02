@@ -94,8 +94,12 @@ std::string TreeImportsController::findDLLPath(const std::string &dllName,
     const char *systemRoot = std::getenv(SystemRoot);
     if (systemRoot) {
         fs::path system32Path = fs::path(systemRoot) / System32 / dllName;
-        if (fs::exists(system32Path)) {
-            return system32Path.string();
+        fs::path drivers = fs::path(System32Drivers) / dllName;
+        // if (fs::exists(system32Path)) {
+        //     return system32Path.string();
+        // }
+        if (fs::exists(drivers)) {
+            return drivers.string();
         }
     }
 

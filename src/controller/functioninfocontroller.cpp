@@ -1,7 +1,6 @@
 #include "controller/functioninfocontroller.h"
 #include "ui_mainwindow.h"
 #include <LIEF/PE.hpp>
-#include <filesystem>
 
 FunctionInfoController::FunctionInfoController(QSharedPointer<FunctionInfo> functionInfo,
                                                Ui::MainWindow *ui,
@@ -32,18 +31,9 @@ void FunctionInfoController::loadFunctionInfoToView(const QModelIndex &index)
     m_ui->treeTableView->update();
     QVector<FunctionInfo> functionInfoLocal;
 
-    namespace fs = std::filesystem;
-    fs::path fp = m_system32.toStdString() + m_dllName.toStdString();
-    if (!fs::exists(fp)) {
-        qWarning() << "File path: " << QString::fromStdString(fp.string()) << " does NOT exist";
-        fp = m_drivers.toStdString() + m_dllName.toStdString();
-    }
+    fs::path fsp = findFilePath();
 
-    if (!fs::exists(fp)) {
-        qWarning() << "File path in drivers: " << QString::fromStdString(fp.string())
-                   << " does NOT exist";
-    }
-    QString filePath = QString::fromStdString(fp.string());
+    QString filePath = QString::fromStdString(fsp.string());
     try {
         std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(filePath.toStdString());
         if (!binary)
@@ -142,4 +132,29 @@ void FunctionInfoController::onDllSelected(const QString &dllName)
     qDebug() << "Selected DLL:" << dllName;
 
     m_dllName = dllName;
+}
+
+fs::path FunctionInfoController::findFilePath()
+{
+    // fs::path fp = m_system32.toStdString() + m_dllName.toStdString();
+    // if (!fs::exists(fp)) {
+    //     qWarning() << "File path: " << QString::fromStdString(fp.string()) << " does NOT exist";
+    //     fp = m_drivers.toStdString() + m_dllName.toStdString();
+    // }
+
+    // if (!fs::exists(fp)) {
+    //     qWarning() << "File path in drivers: " << QString::fromStdString(fp.string())
+    //                << " does NOT exist";
+    // }
+
+    QStringList sl{m_system32, m_drivers};
+    auto it = std::find_if(sl.begin(), sl.end(), [this](QString s) {
+        fs::path fp = s.toStdString() + m_dllName.toStdString();
+        return (fs::exists(fp));
+    });
+    if (it != sl.end()) {
+        fs::path result = it->toStdString() + m_dllName.toStdString();
+        return result;
+    }
+    return {};
 }

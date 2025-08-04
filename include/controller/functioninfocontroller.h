@@ -4,11 +4,12 @@
 #include <QTableView>
 #include "data/functioninfo.h"
 #include "model/functioninfomodel.h"
+#include <filesystem>
 
 namespace Ui {
 class MainWindow;
 }
-
+namespace fs = std::filesystem;
 class FunctionInfoController : public QObject
 {
     Q_OBJECT
@@ -32,6 +33,8 @@ private:
     QString m_dllName{};
     QString m_system32{"C:/Windows/System32/"};
     QString m_drivers{"C:/Windows/System32/drivers/"};
+
+    fs::path findFilePath();
 };
 
 #endif // FUNCTIONINFOCONTROLLER_H

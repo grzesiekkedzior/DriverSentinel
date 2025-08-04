@@ -119,7 +119,7 @@ QVariant FunctionInfoModel::headerData(int section, Qt::Orientation orientation,
     case FunctionColumn::Address:
         return "Address";
     case FunctionColumn::IsExtern:
-        return "Extern?";
+        return "Extern";
     case FunctionColumn::ExportOrdinal:
         return "Export Ordinal";
 

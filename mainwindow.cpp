@@ -6,7 +6,9 @@
 #include "controller/functioninfocontroller.h"
 #include "controller/generalcontroller.h"
 #include "controller/sectioninfocontroller.h"
+#include "controller/stringinfocontroller.h"
 #include "controller/treeimportscontroller.h"
+#include "data/stringinfo.h"
 #include "toolbar/drivertoolbar.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -43,6 +45,9 @@ void MainWindow::start()
                                                           ui);
     FunctionInfoController *fc = new FunctionInfoController(QSharedPointer<FunctionInfo>::create(),
                                                             ui);
+    StringInfoController *si = new StringInfoController(QSharedPointer<StringInfo>::create(),
+                                                        ui->mainTable,
+                                                        ui);
     connect(dt, &DriverToolbar::refreshRequested, dc, &DriverController::refresh);
     connect(dt, &DriverToolbar::clearRequested, dc, &DriverController::clear);
     connect(ui->mainTable,
@@ -60,6 +65,8 @@ void MainWindow::start()
     connect(dt, &DriverToolbar::clearRequested, gc, &GeneralController::clear);
     connect(dt, &DriverToolbar::clearRequested, cc, &CertificateController::clear);
     connect(dt, &DriverToolbar::clearRequested, tc, &TreeImportsController::clear);
+    connect(dt, &DriverToolbar::clearRequested, fc, &FunctionInfoController::clear);
+    connect(dt, &DriverToolbar::clearRequested, si, &StringInfoController::clear);
 
     connect(ui->treeImportsView, &QTreeView::clicked, tc, &TreeImportsController::onTreeItemClicked);
     connect(tc, &TreeImportsController::dllSelected, fc, &FunctionInfoController::onDllSelected);
@@ -67,6 +74,7 @@ void MainWindow::start()
             &QTreeView::clicked,
             fc,
             &FunctionInfoController::loadFunctionInfoToView);
+    connect(ui->mainTable, &QTableView::clicked, si, &StringInfoController::loadStringDataToView);
 
     ui->mainTable->setModel(dc->getDriverModel().data());
     ui->peSectionView->setModel(sc->sectionInfoModel().data());
@@ -76,4 +84,6 @@ void MainWindow::start()
 
     ui->treeImportsView->setModel(tc->treeImportsModel().data());
     ui->treeTableView->setModel(fc->functionInfoModel().data());
+
+    ui->stringsView->setModel(si->stringInfoModel().data());
 }

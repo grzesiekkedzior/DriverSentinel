@@ -61,6 +61,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/model/functioninfomodel.cpp
         include/controller/functioninfocontroller.h
         src/controller/functioninfocontroller.cpp
+        include/data/stringinfo.h
+        include/model/stringinfomodel.h
+        src/model/stringinfomodel.cpp
+        include/controller/stringinfocontroller.h
+        src/controller/stringinfocontroller.cpp
 
 
 

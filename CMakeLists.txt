@@ -13,8 +13,12 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Concurrent)
 
-set(CMAKE_PREFIX_PATH "C:/Program Files (x86)/LIEF/lib/cmake")
-#set(CMAKE_PREFIX_PATH "C:/Program Files (x86)/LIEF-release/lib/cmake")
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    set(CMAKE_PREFIX_PATH "C:/Program Files (x86)/LIEF/lib/cmake")
+else()
+    set(CMAKE_PREFIX_PATH "C:/Program Files (x86)/LIEF-release/lib/cmake")
+endif()
+
 
 find_package(LIEF REQUIRED COMPONENTS STATIC)
 

@@ -1,4 +1,6 @@
 #include "controller/stringinfocontroller.h"
+#include <QFuture>
+#include <QtConcurrent>
 #include "ui_mainwindow.h"
 #include <LIEF/PE.hpp>
 #include <utils/peutils.h>
@@ -15,11 +17,64 @@ StringInfoController::StringInfoController(QSharedPointer<StringInfo> stringInfo
     m_stringInfoModel = QSharedPointer<StringInfoModel>::create();
 }
 
+QFuture<QVector<StringInfo>> StringInfoController::extractStringsFromPE(QString filePath)
+{
+    QFuture<QVector<StringInfo>> future = QtConcurrent::run([this, filePath]() {
+        QVector<StringInfo> l_stringInfoVector;
+        StringInfo l_stringInfo;
+        try {
+            std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(
+                filePath.toStdString());
+            const auto &sections = binary->sections();
+
+            for (const auto &section : sections) {
+                auto vec = section.content();
+                std::string ascii;
+                const size_t minLength = 4;
+                size_t startPos = 0;
+                bool inString = false;
+
+                for (size_t i = 0; i < vec.size(); ++i) {
+                    if (std::isprint(static_cast<unsigned char>(vec[i]))) {
+                        if (!inString) {
+                            inString = true;
+                            startPos = i;
+                        }
+                        ascii += static_cast<char>(vec[i]);
+                    } else {
+                        if (inString && ascii.length() >= minLength) {
+                            l_stringInfo.section = QString::fromStdString(section.name());
+                            l_stringInfo.offset
+                                = QString("0x%1").arg(section.offset() + startPos, 0, 16).toUpper();
+                            l_stringInfo.sectionStrng = QString::fromStdString(ascii);
+                            l_stringInfoVector.append(l_stringInfo);
+                        }
+                        ascii.clear();
+                        inString = false;
+                    }
+                }
+
+                if (inString && ascii.length() >= minLength) {
+                    l_stringInfo.section = QString::fromStdString(section.name());
+                    l_stringInfo.offset
+                        = QString("0x%1").arg(section.offset() + startPos, 0, 16).toUpper();
+                    l_stringInfo.sectionStrng = QString::fromStdString(ascii);
+                    l_stringInfoVector.append(l_stringInfo);
+                }
+            }
+        } catch (const std::exception &e) {
+            qWarning() << "LIEF error:" << e.what();
+        } catch (...) {
+            qWarning() << "Unknown error while parsing PE";
+        }
+        return l_stringInfoVector;
+    });
+
+    return future;
+}
+
 void StringInfoController::loadStringDataToView(const QModelIndex &index)
 {
-    QVector<StringInfo> l_stringInfoVector;
-    StringInfo l_stringInfo;
-
     if (!index.isValid())
         return;
 
@@ -29,52 +84,17 @@ void StringInfoController::loadStringDataToView(const QModelIndex &index)
         return;
     }
 
-    try {
-        std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(filePath.toStdString());
-        const auto &sections = binary->sections();
+    QFuture<QVector<StringInfo>> future = extractStringsFromPE(filePath);
 
-        for (const auto &section : sections) {
-            auto vec = section.content();
-            std::string ascii;
-            const size_t minLength = 4;
-            size_t startPos = 0;
-            bool inString = false;
+    auto watcher = new QFutureWatcher<QVector<StringInfo>>(this);
 
-            for (size_t i = 0; i < vec.size(); ++i) {
-                if (std::isprint(static_cast<unsigned char>(vec[i]))) {
-                    if (!inString) {
-                        inString = true;
-                        startPos = i;
-                    }
-                    ascii += static_cast<char>(vec[i]);
-                } else {
-                    if (inString && ascii.length() >= minLength) {
-                        l_stringInfo.section = QString::fromStdString(section.name());
-                        l_stringInfo.offset
-                            = QString("0x%1").arg(section.offset() + startPos, 0, 16).toUpper();
-                        l_stringInfo.sectionStrng = QString::fromStdString(ascii);
-                        l_stringInfoVector.append(l_stringInfo);
-                    }
-                    ascii.clear();
-                    inString = false;
-                }
-            }
+    connect(watcher, &QFutureWatcher<QVector<StringInfo>>::finished, this, [this, watcher]() {
+        QVector<StringInfo> result = watcher->result();
+        updateModel(result);
+        watcher->deleteLater();
+    });
 
-            if (inString && ascii.length() >= minLength) {
-                l_stringInfo.section = QString::fromStdString(section.name());
-                l_stringInfo.offset
-                    = QString("0x%1").arg(section.offset() + startPos, 0, 16).toUpper();
-                l_stringInfo.sectionStrng = QString::fromStdString(ascii);
-                l_stringInfoVector.append(l_stringInfo);
-            }
-        }
-    } catch (const std::exception &e) {
-        qWarning() << "LIEF error:" << e.what();
-    } catch (...) {
-        qWarning() << "Unknown error while parsing PE";
-    }
-
-    updateModel(l_stringInfoVector);
+    watcher->setFuture(future);
 }
 
 void StringInfoController::updateModel(const QVector<StringInfo> &si)

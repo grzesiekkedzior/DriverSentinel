@@ -1,6 +1,7 @@
 #ifndef STRINGINFOCONTROLLER_H
 #define STRINGINFOCONTROLLER_H
 
+#include <QFuture>
 #include <QObject>
 #include <QSharedPointer>
 #include <QTableView>
@@ -32,6 +33,7 @@ private:
     QSharedPointer<StringInfoModel> m_stringInfoModel;
     QTableView *m_mainTableView{};
     Ui::MainWindow *m_ui;
+    QFuture<QVector<StringInfo>> extractStringsFromPE(QString filePath);
 };
 
 #endif // STRINGINFOCONTROLLER_H

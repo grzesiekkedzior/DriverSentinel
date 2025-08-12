@@ -123,6 +123,6 @@ void TreeImportsController::onTreeItemClicked(const QModelIndex &index)
         return;
 
     QString dllName = item->data(0).toString();
-    qDebug() << "[Tree] Emitting signal with:" << dllName;
+    //qDebug() << "[Tree] Emitting signal with:" << dllName;
     emit dllSelected(dllName);
 }

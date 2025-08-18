@@ -9,6 +9,7 @@
 #include "controller/stringinfocontroller.h"
 #include "controller/treeimportscontroller.h"
 #include "data/stringinfo.h"
+#include "model/stringfilterproxymodel.h"
 #include "toolbar/drivertoolbar.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -86,4 +87,31 @@ void MainWindow::start()
     ui->treeTableView->setModel(fc->functionInfoModel().data());
 
     ui->stringsView->setModel(si->stringInfoModel().data());
+
+    StringFilterProxyModel *sfpm = new StringFilterProxyModel;
+    sfpm->setSourceModel(si->stringInfoModel().data());
+    ui->stringsView->setModel(sfpm);
+    ui->spinBoxMax->setValue(INT_MAX);
+    connect(ui->searchPushButton, &QPushButton::clicked, this, [this, sfpm]() {
+        sfpm->setFilteringString(ui->searchEdit->text());
+        sfpm->setCaseSensitive(ui->checkCaseSensitive->isChecked());
+
+        sfpm->setMin(ui->spinBoxMin->value() > 0 ? std::optional<int>(ui->spinBoxMin->value())
+                                                 : std::nullopt);
+        sfpm->setMax(ui->spinBoxMax->value() > 0 ? std::optional<int>(ui->spinBoxMax->value())
+                                                 : std::nullopt);
+
+        sfpm->setRegex(ui->checkRegex->isChecked());
+    });
+
+    connect(ui->pushButtonClearFilters, &QPushButton::clicked, this, [this, sfpm]() {
+        // Reset UI
+        ui->searchEdit->clear();
+        ui->checkRegex->setChecked(false);
+        ui->checkCaseSensitive->setChecked(false);
+        ui->spinBoxMin->setValue(0);
+        ui->spinBoxMax->setValue(INT_MAX);
+
+        sfpm->resetModel();
+    });
 }

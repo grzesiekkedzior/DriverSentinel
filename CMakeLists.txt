@@ -75,6 +75,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/controller/stringinfocontroller.cpp
         include/controller/stringtoolboxcontroller.h
         src/controller/stringtoolboxcontroller.cpp
+        include/model/stringfilterproxymodel.h
+        src/model/stringfilterproxymodel.cpp
 
 
 

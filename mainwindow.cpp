@@ -7,6 +7,7 @@
 #include "controller/generalcontroller.h"
 #include "controller/sectioninfocontroller.h"
 #include "controller/stringinfocontroller.h"
+#include "controller/stringtoolboxcontroller.h"
 #include "controller/treeimportscontroller.h"
 #include "data/stringinfo.h"
 #include "model/stringfilterproxymodel.h"
@@ -17,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->comboSort->hide();
     start();
 }
 
@@ -114,4 +116,6 @@ void MainWindow::start()
 
         sfpm->resetModel();
     });
+
+    StringToolBoxController *stc = new StringToolBoxController{sfpm, ui, this};
 }

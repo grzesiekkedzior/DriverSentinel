@@ -104,7 +104,11 @@ void StringInfoController::updateModel(const QVector<StringInfo> &si)
     m_stringInfoModel->setStringInfo(si);
 }
 
-void StringInfoController::clear() {}
+void StringInfoController::clear()
+{
+    if (m_stringInfoModel)
+        m_stringInfoModel->setStringInfo({});
+}
 
 QSharedPointer<StringInfoModel> StringInfoController::stringInfoModel() const
 {

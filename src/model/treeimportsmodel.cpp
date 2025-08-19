@@ -36,32 +36,38 @@ QModelIndex TreeImportsModel::parent(const QModelIndex &index) const
 
 int TreeImportsModel::rowCount(const QModelIndex &parent) const
 {
+    if (!m_rootItem)
+        return 0;
+
     TreeImportsItem *parentItem = parent.isValid()
                                       ? static_cast<TreeImportsItem *>(parent.internalPointer())
                                       : m_rootItem.get();
 
-    return parentItem->childCount();
+    return parentItem ? parentItem->childCount() : 0;
 }
 
 int TreeImportsModel::columnCount(const QModelIndex &parent) const
 {
     // For now flat model
     Q_UNUSED(parent);
-    return m_rootItem->columnCount();
+    return m_rootItem ? m_rootItem->columnCount() : 0;
 }
 
 QVariant TreeImportsModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || role != Qt::DisplayRole)
-        return QVariant();
+    if (!m_rootItem || !index.isValid() || role != Qt::DisplayRole)
+        return {};
 
     TreeImportsItem *item = static_cast<TreeImportsItem *>(index.internalPointer());
-    return item->data(index.column());
+    return item ? item->data(index.column()) : QVariant{};
 }
 
 Qt::ItemFlags TreeImportsModel::flags(const QModelIndex &index) const
 {
-    return {};
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
 }
 
 void TreeImportsModel::setRootItem(std::unique_ptr<TreeImportsItem> root)

@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Concurrent)
+#find_package(Qt6 REQUIRED COMPONENTS Pdf)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     set(CMAKE_PREFIX_PATH "C:/Program Files (x86)/LIEF/lib/cmake")
@@ -107,6 +108,7 @@ endif()
 target_link_libraries(DriverSentinel PRIVATE Qt${QT_VERSION_MAJOR}::Widgets LIEF::LIEF)
 target_link_libraries(DriverSentinel PRIVATE Version)
 target_link_libraries(DriverSentinel PRIVATE Qt6::Concurrent)
+#target_link_libraries(DriverSentinel Qt6::Pdf)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

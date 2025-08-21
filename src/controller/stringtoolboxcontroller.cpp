@@ -6,6 +6,7 @@
 #include <QProgressDialog>
 #include <QtConcurrent/QtConcurrent>
 #include "ui_mainwindow.h"
+#include <utils/pdftableexporter.h>
 
 StringToolBoxController::StringToolBoxController(StringFilterProxyModel *model,
                                                  Ui::MainWindow *ui,
@@ -30,161 +31,15 @@ StringToolBoxController::StringToolBoxController(StringFilterProxyModel *model,
 void StringToolBoxController::saveAsPdf()
 {
     QString fileName = QFileDialog::getSaveFileName(nullptr, "Save as PDF", "", "*.pdf");
+
     if (fileName.isEmpty())
         return;
 
     if (!m_proxyModel)
         return;
 
-    auto *model = m_proxyModel.data();
-    if (!model)
-        return;
-
-    QProgressDialog *progressDialog = new QProgressDialog("Generating PDF...",
-                                                          "Cancel",
-                                                          0,
-                                                          model->rowCount());
-    progressDialog->setWindowModality(Qt::WindowModal);
-    progressDialog->setMinimumDuration(0);
-    progressDialog->show();
-
-    QFuture<void> future = QtConcurrent::run([=]() {
-        QPdfWriter writer(fileName);
-        writer.setPageSize(QPageSize(QPageSize::A4));
-        writer.setResolution(300);
-
-        QPainter painter(&writer);
-        QFont font = painter.font();
-        font.setPointSize(8);
-        painter.setFont(font);
-
-        int rowCount = model->rowCount();
-        int columnCount = model->columnCount();
-
-        int marginLeft = 20;
-        int marginTop = 60;
-        int rowHeightMin = 20;
-        int columnWidth = 150;
-        int columnSpacing = 20;
-        int usableWidth = writer.width() - 2 * marginLeft;
-        int pageHeight = writer.height() - marginTop;
-
-        int x = marginLeft;
-        int y = marginTop;
-
-        auto drawHeaders = [&]() {
-            int headerMaxHeight = rowHeightMin;
-            int lastColWidth = usableWidth - (columnCount - 1) * (columnWidth + columnSpacing);
-
-            QTextDocument docHeader;
-            docHeader.setPlainText(model->headerData(columnCount - 1, Qt::Horizontal).toString());
-            docHeader.setTextWidth(lastColWidth);
-            docHeader.setDefaultFont(font);
-            QTextOption opt;
-            opt.setWrapMode(QTextOption::WordWrap);
-            docHeader.setDefaultTextOption(opt);
-            int lastHeight = static_cast<int>(docHeader.size().height());
-            if (lastHeight > headerMaxHeight)
-                headerMaxHeight = lastHeight;
-
-            int curX = x;
-            for (int col = 0; col < columnCount; ++col) {
-                int w = (col == columnCount - 1) ? lastColWidth : columnWidth;
-                QString header = model->headerData(col, Qt::Horizontal).toString();
-
-                if (col == columnCount - 1) {
-                    QTextDocument doc;
-                    doc.setPlainText(header);
-                    doc.setTextWidth(w);
-                    doc.setDefaultFont(font);
-                    QTextOption option;
-                    option.setWrapMode(QTextOption::WordWrap);
-                    doc.setDefaultTextOption(option);
-
-                    painter.save();
-                    painter.translate(curX, y);
-                    QRectF rect(0, 0, w, headerMaxHeight);
-                    doc.drawContents(&painter, rect);
-                    painter.restore();
-                } else {
-                    QRect rect(curX, y, w, headerMaxHeight);
-                    painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, header);
-                }
-                curX += w + columnSpacing;
-            }
-
-            y += headerMaxHeight;
-        };
-
-        drawHeaders();
-
-        for (int row = 0; row < rowCount; ++row) {
-            int maxHeight = rowHeightMin;
-            int lastColWidth = usableWidth - (columnCount - 1) * (columnWidth + columnSpacing);
-
-            QString lastText = model->data(model->index(row, columnCount - 1)).toString();
-            QTextDocument doc;
-            doc.setPlainText(lastText);
-            doc.setTextWidth(lastColWidth);
-            doc.setDefaultFont(font);
-            QTextOption option;
-            option.setWrapMode(QTextOption::WordWrap);
-            doc.setDefaultTextOption(option);
-            int lastHeight = static_cast<int>(doc.size().height());
-            if (lastHeight > maxHeight)
-                maxHeight = lastHeight;
-
-            if (y + maxHeight > pageHeight) {
-                writer.newPage();
-                y = marginTop;
-                drawHeaders();
-            }
-
-            int curX = x;
-            for (int col = 0; col < columnCount; ++col) {
-                int w = (col == columnCount - 1) ? lastColWidth : columnWidth;
-                QString text = model->data(model->index(row, col)).toString();
-
-                if (col == columnCount - 1) {
-                    QTextDocument docCell;
-                    docCell.setPlainText(text);
-                    docCell.setTextWidth(w);
-                    docCell.setDefaultFont(font);
-                    QTextOption opt;
-                    opt.setWrapMode(QTextOption::WordWrap);
-                    docCell.setDefaultTextOption(opt);
-
-                    painter.save();
-                    painter.translate(curX, y);
-                    QRectF rect(0, 0, w, maxHeight);
-                    docCell.drawContents(&painter, rect);
-                    painter.restore();
-                } else {
-                    QRect rect(curX, y, w, maxHeight);
-                    painter.drawText(rect, Qt::AlignLeft | Qt::AlignVCenter, text);
-                }
-
-                curX += w + columnSpacing;
-            }
-
-            y += maxHeight;
-
-            QMetaObject::invokeMethod(progressDialog,
-                                      "setValue",
-                                      Qt::QueuedConnection,
-                                      Q_ARG(int, row + 1));
-        }
-
-        painter.end();
-    });
-
-    QFutureWatcher<void> *watcher = new QFutureWatcher<void>();
-    watcher->setFuture(future);
-    QObject::connect(watcher, &QFutureWatcher<void>::finished, [progressDialog, watcher]() {
-        progressDialog->close();
-        watcher->deleteLater();
-        progressDialog->deleteLater();
-    });
+    PdfTableExporter pdfExporter{m_proxyModel, fileName, this};
+    pdfExporter.exportPdf();
 }
 
 void StringToolBoxController::saveAsTxt()

@@ -78,6 +78,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/controller/stringtoolboxcontroller.cpp
         include/model/stringfilterproxymodel.h
         src/model/stringfilterproxymodel.cpp
+        include/utils/pdftableexporter.h
+        src/utils/pdftableexporter.cpp
 
 
 

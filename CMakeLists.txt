@@ -80,6 +80,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/model/stringfilterproxymodel.cpp
         include/utils/pdftableexporter.h
         src/utils/pdftableexporter.cpp
+        include/data/dosheader.h
+        include/controller/dosheadercontroller.h
+        src/controller/dosheadercontroller.cpp
 
 
 

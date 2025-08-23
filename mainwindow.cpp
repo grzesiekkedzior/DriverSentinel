@@ -2,6 +2,7 @@
 #include <QObject>
 #include "./ui_mainwindow.h"
 #include "controller/certificatecontroller.h"
+#include "controller/dosheadercontroller.h"
 #include "controller/drivercontroller.h"
 #include "controller/functioninfocontroller.h"
 #include "controller/generalcontroller.h"
@@ -12,6 +13,7 @@
 #include "data/stringinfo.h"
 #include "model/stringfilterproxymodel.h"
 #include "toolbar/drivertoolbar.h"
+#include <data/dosheader.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -118,4 +120,8 @@ void MainWindow::start()
     });
 
     StringToolBoxController *stc = new StringToolBoxController{sfpm, ui, this};
+    DosHeaderController *dhc = new DosHeaderController(QSharedPointer<DosHeader>::create(),
+                                                       ui->mainTable,
+                                                       this->ui);
+    connect(dt, &DriverToolbar::clearRequested, dhc, &DosHeaderController::clear);
 }

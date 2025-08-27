@@ -42,7 +42,6 @@ void OptionalHeaderController::loadOptionalHeaderInfo(const QModelIndex &index)
 
         if (binary) {
             uint32_t optionalHeaderOffset = getOptionalOffsetAddress(binary);
-            m_ui->off_1->setText(QString::number(optionalHeaderOffset, 16));
             auto optionalHeader = binary->optional_header();
 
             auto magicEnum = binary->optional_header().magic();
@@ -59,7 +58,7 @@ void OptionalHeaderController::loadOptionalHeaderInfo(const QModelIndex &index)
                     4, // sizeOfUninitializedData
                     4, // entryPoint
                     4, // baseOfCode
-                    4, // baseOfData (TYLKO W PE32)
+                    4, // baseOfData (ONLY IN PE32)
                     4, // imageBase (32-bit)
                     4, // sectionAlign
                     4, // fileAlign
@@ -93,7 +92,7 @@ void OptionalHeaderController::loadOptionalHeaderInfo(const QModelIndex &index)
                     4, // sizeOfUninitializedData
                     4, // entryPoint
                     4, // baseOfCode
-                    // BRAK baseOfData w PE32+
+                    // NO baseOfData IN PE32+
                     8, // imageBase (64-bit)
                     4, // sectionAlign
                     4, // fileAlign

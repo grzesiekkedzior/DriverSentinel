@@ -6,6 +6,7 @@
 #include "controller/drivercontroller.h"
 #include "controller/functioninfocontroller.h"
 #include "controller/generalcontroller.h"
+#include "controller/optionalheadercontroller.h"
 #include "controller/sectioninfocontroller.h"
 #include "controller/stringinfocontroller.h"
 #include "controller/stringtoolboxcontroller.h"
@@ -14,6 +15,7 @@
 #include "model/stringfilterproxymodel.h"
 #include "toolbar/drivertoolbar.h"
 #include <data/dosheader.h>
+#include <data/optionalheaderinfo.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -124,4 +126,10 @@ void MainWindow::start()
                                                        ui->mainTable,
                                                        this->ui);
     connect(dt, &DriverToolbar::clearRequested, dhc, &DosHeaderController::clear);
+
+    OptionalHeaderController *ohc
+        = new OptionalHeaderController(QSharedPointer<OptionalHeaderInfo>::create(),
+                                       ui->mainTable,
+                                       this->ui);
+    connect(dt, &DriverToolbar::clearRequested, ohc, &OptionalHeaderController::clear);
 }

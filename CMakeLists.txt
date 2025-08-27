@@ -83,6 +83,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/data/dosheader.h
         include/controller/dosheadercontroller.h
         src/controller/dosheadercontroller.cpp
+        include/data/optionalheaderinfo.h
+        include/controller/optionalheadercontroller.h
+        src/controller/optionalheadercontroller.cpp
 
 
 

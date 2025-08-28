@@ -80,26 +80,68 @@ bool TreeImportsController::starts_with(const std::string &str, const std::strin
 std::string TreeImportsController::findDLLPath(const std::string &dllName,
                                                const std::string &filePath)
 {
-    // Filesystem library (since C++17)
     namespace fs = std::filesystem;
 
+    // 1. exe folder
     fs::path baseDir = fs::path(filePath).parent_path();
-
     fs::path candidate = baseDir / dllName;
     if (fs::exists(candidate)) {
         return candidate.string();
     }
 
-    // unsafe getenv
-    const char *systemRoot = std::getenv(SystemRoot);
-    if (systemRoot) {
-        fs::path system32Path = fs::path(systemRoot) / System32 / dllName;
-        fs::path drivers = fs::path(System32Drivers) / dllName;
-        // if (fs::exists(system32Path)) {
-        //     return system32Path.string();
-        // }
-        if (fs::exists(drivers)) {
-            return drivers.string();
+    // 2. SystemRoot
+    const char *systemRoot = std::getenv("SystemRoot");
+    if (!systemRoot) {
+        systemRoot = SystemRoot; // fallback
+    }
+
+    // 2a. System32
+    candidate = fs::path(systemRoot) / System32 / dllName;
+    if (fs::exists(candidate)) {
+        return candidate.string();
+    }
+
+    // 2b. SysWOW64
+    candidate = fs::path(systemRoot) / SysWOW64 / dllName;
+    if (fs::exists(candidate)) {
+        return candidate.string();
+    }
+
+    // 2c. System
+    candidate = fs::path(systemRoot) / System / dllName;
+    if (fs::exists(candidate)) {
+        return candidate.string();
+    }
+
+    // 2d. Windows root
+    candidate = fs::path(systemRoot) / dllName;
+    if (fs::exists(candidate)) {
+        return candidate.string();
+    }
+
+    // 2e. System32/drivers
+    candidate = fs::path(systemRoot) / DriversDir / dllName;
+    if (fs::exists(candidate)) {
+        return candidate.string();
+    }
+
+    // 3. Current
+    candidate = fs::current_path() / dllName;
+    if (fs::exists(candidate)) {
+        return candidate.string();
+    }
+
+    // 4. PATH
+    if (const char *envPath = std::getenv("PATH")) {
+        std::stringstream ss(envPath);
+        std::string dir;
+        while (std::getline(ss, dir, ';')) {
+            if (!dir.empty()) {
+                candidate = fs::path(dir) / dllName;
+                if (fs::exists(candidate)) {
+                    return candidate.string();
+                }
+            }
         }
     }
 

@@ -37,6 +37,7 @@ void MainWindow::start()
 
     DriverToolbar *dt = new DriverToolbar;
     this->addToolBar(dt);
+    dc->setDriverToolbar(dt);
 
     GeneralController *gc = new GeneralController(QSharedPointer<GeneralInfo>::create(),
                                                   ui->mainTable,
@@ -57,6 +58,7 @@ void MainWindow::start()
                                                         ui);
     connect(dt, &DriverToolbar::refreshRequested, dc, &DriverController::refresh);
     connect(dt, &DriverToolbar::clearRequested, dc, &DriverController::clear);
+    connect(dt, &DriverToolbar::openPERequested, dc, &DriverController::openPEFile);
     connect(ui->mainTable,
             &QTableView::clicked,
             sc,

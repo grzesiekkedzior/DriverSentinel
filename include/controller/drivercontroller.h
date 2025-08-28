@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "model/drivermodel.h"
+#include "toolbar/drivertoolbar.h"
 #include <windows.h>
 
 namespace Ui {
@@ -19,14 +20,20 @@ public:
     void setDriverModel(QSharedPointer<DriverModel> newDriverModel);
     void start();
 
+    DriverToolbar *driverToolbar() const;
+    void setDriverToolbar(DriverToolbar *newDriverToolbar);
+
 public slots:
     void refresh();
     void clear();
+    void openPEFile();
 
 private:
     QSharedPointer<DriverModel> m_driverModel;
     Ui::MainWindow *m_ui;
     QVector<DriverInfo> loadDrivers();
+    QString m_selectedPEFile{};
+    DriverToolbar *m_driverToolbar;
 };
 
 #endif // DRIVERCONTROLLER_H

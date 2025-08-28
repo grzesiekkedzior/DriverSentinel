@@ -13,10 +13,12 @@ public:
 signals:
     void refreshRequested();
     void clearRequested();
+    void openPERequested();
 
 private:
     QAction *refreshAction;
     QAction *clearAction;
+    QAction *openPEAction;
 };
 
 #endif // DRIVERTOOLBAR_H

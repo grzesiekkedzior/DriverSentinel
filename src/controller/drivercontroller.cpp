@@ -1,4 +1,6 @@
 #include "controller/drivercontroller.h"
+#include <QFileDialog>
+#include <QMessageBox>
 #include "ui_mainwindow.h"
 #include <psapi.h>
 
@@ -21,19 +23,54 @@ void DriverController::start()
 {
     if (!m_driverModel)
         return;
-    QVector<DriverInfo> df = loadDrivers();
+
+    QVector<DriverInfo> df;
+
+    if (!m_selectedPEFile.isEmpty()) {
+        DriverInfo info;
+        info.path = m_selectedPEFile;
+        info.name = QFileInfo(m_selectedPEFile).fileName();
+        //info.baseAddress
+
+        df.append(info);
+    } else {
+        df = loadDrivers();
+    }
+
     m_driverModel->setDrivers(df);
 }
 
 void DriverController::refresh()
 {
+    emit m_driverToolbar->clearRequested();
     start();
 }
 
 void DriverController::clear()
 {
-    if (m_driverModel)
+    if (m_driverModel) {
         m_driverModel->setDrivers({});
+        m_selectedPEFile = "";
+    }
+}
+
+void DriverController::openPEFile()
+{
+    QString selectedFile
+        = QFileDialog::getOpenFileName(nullptr,
+                                       tr("Select PE file"),
+                                       "",
+                                       tr("PE Files (*.exe *.dll *.sys);;All Files (*)"));
+
+    if (selectedFile.isEmpty()) {
+        return;
+    }
+    emit m_driverToolbar->clearRequested();
+
+    m_selectedPEFile = selectedFile;
+    QMessageBox::information(nullptr, tr("Selected file"), m_selectedPEFile);
+
+    start();
 }
 
 QVector<DriverInfo> DriverController::loadDrivers()
@@ -66,4 +103,14 @@ QVector<DriverInfo> DriverController::loadDrivers()
     }
 
     return drivers;
+}
+
+DriverToolbar *DriverController::driverToolbar() const
+{
+    return m_driverToolbar;
+}
+
+void DriverController::setDriverToolbar(DriverToolbar *newDriverToolbar)
+{
+    m_driverToolbar = newDriverToolbar;
 }

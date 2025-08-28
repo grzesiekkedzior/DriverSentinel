@@ -33,6 +33,15 @@ void TreeImportsController::buildImportsRecursive(const std::string &filePath,
                                                   std::set<std::string> &visited,
                                                   TreeImportsItem *parentItem)
 {
+    std::string absPath = std::filesystem::absolute(filePath).string();
+    if (visited.count(absPath)) {
+        qDebug() << "Already visited:" << QString::fromStdString(absPath);
+        return;
+    }
+    visited.insert(absPath);
+
+    qDebug() << "Processing:" << QString::fromStdString(absPath);
+
     auto binary = LIEF::PE::Parser::parse(filePath);
     if (!binary) {
         qWarning() << "Cant parse file:" << QString::fromStdString(filePath);
@@ -42,13 +51,12 @@ void TreeImportsController::buildImportsRecursive(const std::string &filePath,
     for (const auto &import : binary->imports()) {
         std::string dllName = import.name();
 
-        if (starts_with(dllName, "ext-ms-win-") || starts_with(dllName, "api-ms-win-"))
+        if (starts_with(dllName, "ext-ms-win-") || starts_with(dllName, "api-ms-win-")) {
+            qDebug() << "  Skipping:" << QString::fromStdString(dllName);
             continue;
+        }
 
-        if (visited.count(dllName))
-            continue;
-
-        visited.insert(dllName);
+        qDebug() << "  +-- DLL:" << QString::fromStdString(dllName);
 
         auto dllItem = std::make_unique<TreeImportsItem>(QVariantList{QString::fromStdString(
                                                              dllName)},
@@ -60,16 +68,23 @@ void TreeImportsController::buildImportsRecursive(const std::string &filePath,
 
             auto funcItem = std::make_unique<TreeImportsItem>(QVariantList{funcName}, dllItem.get());
             dllItem->appendChild(std::move(funcItem));
+
+            qDebug() << "  |     Function:" << funcName;
         }
 
         TreeImportsItem *dllRawPtr = dllItem.get();
         parentItem->appendChild(std::move(dllItem));
 
         std::string dllPath = findDLLPath(dllName, filePath);
-        if (std::filesystem::exists(dllPath)) {
+        if (!dllPath.empty() && std::filesystem::exists(dllPath)) {
+            qDebug() << "  |-- Recursing into:" << QString::fromStdString(dllPath);
             buildImportsRecursive(dllPath, visited, dllRawPtr);
+        } else {
+            qDebug() << "  |-- DLL not found:" << QString::fromStdString(dllName);
         }
     }
+
+    qDebug() << "Finished:" << QString::fromStdString(absPath);
 }
 
 bool TreeImportsController::starts_with(const std::string &str, const std::string &prefix)
@@ -81,67 +96,28 @@ std::string TreeImportsController::findDLLPath(const std::string &dllName,
                                                const std::string &filePath)
 {
     namespace fs = std::filesystem;
+    std::vector<fs::path> searchPaths;
 
-    // 1. exe folder
-    fs::path baseDir = fs::path(filePath).parent_path();
-    fs::path candidate = baseDir / dllName;
-    if (fs::exists(candidate)) {
-        return candidate.string();
-    }
+    searchPaths.push_back(fs::path(filePath).parent_path());
+    searchPaths.push_back(fs::path(SystemRoot) / System32);
+    searchPaths.push_back(fs::path(SystemRoot) / SysWOW64);
+    searchPaths.push_back(fs::path(SystemRoot) / DriversDir);
 
-    // 2. SystemRoot
-    const char *systemRoot = std::getenv("SystemRoot");
-    if (!systemRoot) {
-        systemRoot = SystemRoot; // fallback
-    }
+    searchPaths.push_back(fs::current_path());
 
-    // 2a. System32
-    candidate = fs::path(systemRoot) / System32 / dllName;
-    if (fs::exists(candidate)) {
-        return candidate.string();
-    }
-
-    // 2b. SysWOW64
-    candidate = fs::path(systemRoot) / SysWOW64 / dllName;
-    if (fs::exists(candidate)) {
-        return candidate.string();
-    }
-
-    // 2c. System
-    candidate = fs::path(systemRoot) / System / dllName;
-    if (fs::exists(candidate)) {
-        return candidate.string();
-    }
-
-    // 2d. Windows root
-    candidate = fs::path(systemRoot) / dllName;
-    if (fs::exists(candidate)) {
-        return candidate.string();
-    }
-
-    // 2e. System32/drivers
-    candidate = fs::path(systemRoot) / DriversDir / dllName;
-    if (fs::exists(candidate)) {
-        return candidate.string();
-    }
-
-    // 3. Current
-    candidate = fs::current_path() / dllName;
-    if (fs::exists(candidate)) {
-        return candidate.string();
-    }
-
-    // 4. PATH
     if (const char *envPath = std::getenv("PATH")) {
         std::stringstream ss(envPath);
         std::string dir;
         while (std::getline(ss, dir, ';')) {
-            if (!dir.empty()) {
-                candidate = fs::path(dir) / dllName;
-                if (fs::exists(candidate)) {
-                    return candidate.string();
-                }
-            }
+            if (!dir.empty())
+                searchPaths.push_back(fs::path(dir));
+        }
+    }
+
+    for (const auto &dir : searchPaths) {
+        fs::path candidate = dir / dllName;
+        if (fs::exists(candidate)) {
+            return candidate.string();
         }
     }
 

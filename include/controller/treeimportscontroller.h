@@ -32,11 +32,11 @@ private:
     QSharedPointer<TreeImportsModel> m_treeImportsModel;
     QTreeView *m_treeView{};
     Ui::MainWindow *m_ui;
+
     static constexpr const char *SystemRoot = "C:/Windows";
     static constexpr const char *System32 = "System32";
     static constexpr const char *SysWOW64 = "SysWOW64";
-    static constexpr const char *System = "System";
-    static constexpr const char *DriversDir = "System32/drivers";
+    static constexpr const char *DriversDir = "drivers";
 
     void buildImportsRecursive(const std::string &filePath,
                                std::set<std::string> &visited,

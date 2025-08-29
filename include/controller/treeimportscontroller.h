@@ -21,6 +21,8 @@ public:
 
     void updateModel(std::unique_ptr<TreeImportsItem> root);
     void onTreeItemClicked(const QModelIndex &index);
+    void exportModelToFile(const QString &fileName);
+    void exportModelToJson(const QString &fileName);
 signals:
     void dllSelected(const QString &dllName);
 public slots:

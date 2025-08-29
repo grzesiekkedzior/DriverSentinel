@@ -19,10 +19,22 @@ public:
 
     void setRootItem(std::unique_ptr<TreeImportsItem> root);
 
+    // Exports
+    void exportToFile(const QString &filename);
+    void exportToJson(const QString &filename);
+
 private:
     std::unique_ptr<TreeImportsItem> m_rootItem;
 
     TreeImportsItem *getItem(const QModelIndex &index) const;
+
+    // Exports
+    void exportRecursive(TreeImportsItem *item,
+                         QTextStream &out,
+                         int depth,
+                         const QString &parentIndent = "",
+                         bool isLast = false);
+    void exportJsonRecursive(TreeImportsItem *item, QJsonObject &jsonObj);
 };
 
 #endif // TREEIMPORTSMODEL_H

@@ -126,6 +126,8 @@ std::string TreeImportsController::findDLLPath(const std::string &dllName,
 
 void TreeImportsController::updateModel(std::unique_ptr<TreeImportsItem> root)
 {
+    //exportModelToFile("import_tree.txt");
+    //exportModelToJson("import_json.json");
     m_treeImportsModel->setRootItem(std::move(root));
 }
 
@@ -143,4 +145,18 @@ void TreeImportsController::onTreeItemClicked(const QModelIndex &index)
     QString dllName = item->data(0).toString();
     //qDebug() << "[Tree] Emitting signal with:" << dllName;
     emit dllSelected(dllName);
+}
+
+void TreeImportsController::exportModelToFile(const QString &fileName)
+{
+    if (m_treeImportsModel) {
+        m_treeImportsModel->exportToFile(fileName);
+    }
+}
+
+void TreeImportsController::exportModelToJson(const QString &fileName)
+{
+    if (m_treeImportsModel) {
+        m_treeImportsModel->exportToJson(fileName);
+    }
 }

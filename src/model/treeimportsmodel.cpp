@@ -173,3 +173,49 @@ void TreeImportsModel::exportJsonRecursive(TreeImportsItem *item, QJsonObject &j
         jsonObj["children"] = childrenArray;
     }
 }
+
+void TreeImportsModel::exportToCsv(const QString &filename)
+{
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning() << "Cannot open file:" << filename;
+        return;
+    }
+
+    QTextStream out(&file);
+
+    out << "Depth,Type,Name,Parent,ChildCount\n";
+
+    if (m_rootItem) {
+        exportCsvRecursive(m_rootItem.get(), out, 0, "ROOT");
+    }
+
+    file.close();
+    qDebug() << "Tree exported to CSV:" << filename;
+}
+
+void TreeImportsModel::exportCsvRecursive(TreeImportsItem *item,
+                                          QTextStream &out,
+                                          int depth,
+                                          const QString &parentName)
+{
+    if (!item)
+        return;
+
+    QString name = item->data(0).toString();
+    QString type = (item->childCount() > 0) ? "DLL" : "FUNCTION";
+
+    QString escapedName = name;
+    escapedName.replace("\"", "\"\"");
+
+    QString escapedParent = parentName;
+    escapedParent.replace("\"", "\"\"");
+
+    out << depth << "," << type << ","
+        << "\"" << escapedName << "\","
+        << "\"" << escapedParent << "\"," << item->childCount() << "\n";
+
+    for (int i = 0; i < item->childCount(); ++i) {
+        exportCsvRecursive(item->child(i), out, depth + 1, name);
+    }
+}

@@ -1,4 +1,6 @@
 #include "controller/treeimportscontroller.h"
+#include <QFileDialog>
+#include <QMessageBox>
 #include "ui_mainwindow.h"
 #include <filesystem>
 #include <utils/peutils.h>
@@ -11,6 +13,7 @@ TreeImportsController::TreeImportsController(QSharedPointer<TreeImportsItem> tre
     , m_ui(ui)
 {
     m_treeImportsModel = QSharedPointer<TreeImportsModel>::create();
+    connect(m_ui->treeExportButton, &QPushButton::clicked, this, &TreeImportsController::exportTree);
 }
 
 void TreeImportsController::loadImportsDataToView(const QModelIndex &index)
@@ -124,6 +127,37 @@ std::string TreeImportsController::findDLLPath(const std::string &dllName,
     return "";
 }
 
+void TreeImportsController::exportTree()
+{
+    if (!m_treeImportsModel.isNull() && (m_treeImportsModel->rowCount(QModelIndex()) > 0)) {
+        QString fileName = QFileDialog::getSaveFileName(
+            nullptr,
+            tr("Export tree"),
+            "",
+            tr("Text file (*.txt);;CSV file (*.csv);;JSON file (*.json)"));
+
+        if (fileName.isEmpty())
+            return;
+
+        if (fileName.endsWith(".txt", Qt::CaseInsensitive)) {
+            exportModelToFile(fileName);
+        } else if (fileName.endsWith(".csv", Qt::CaseInsensitive)) {
+            exportModelToCsv(fileName);
+        } else if (fileName.endsWith(".json", Qt::CaseInsensitive)) {
+            exportModelToJson(fileName);
+        } else {
+            QMessageBox::warning(nullptr, tr("Export"), tr("Unknown file format."));
+        }
+    } else {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Critical);
+        msgBox.setWindowIcon(QIcon::fromTheme("dialog-error"));
+        msgBox.setWindowTitle(tr("Error"));
+        msgBox.setText(tr("The Tree of imports is not available."));
+        msgBox.exec();
+    }
+}
+
 void TreeImportsController::updateModel(std::unique_ptr<TreeImportsItem> root)
 {
     //exportModelToFile("import_tree.txt");
@@ -158,5 +192,12 @@ void TreeImportsController::exportModelToJson(const QString &fileName)
 {
     if (m_treeImportsModel) {
         m_treeImportsModel->exportToJson(fileName);
+    }
+}
+
+void TreeImportsController::exportModelToCsv(const QString &fileName)
+{
+    if (m_treeImportsModel) {
+        m_treeImportsModel->exportToCsv(fileName);
     }
 }

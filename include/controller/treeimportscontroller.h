@@ -23,6 +23,7 @@ public:
     void onTreeItemClicked(const QModelIndex &index);
     void exportModelToFile(const QString &fileName);
     void exportModelToJson(const QString &fileName);
+    void exportModelToCsv(const QString &fileName);
 signals:
     void dllSelected(const QString &dllName);
 public slots:
@@ -46,6 +47,7 @@ private:
 
     bool starts_with(const std::string &str, const std::string &prefix);
     std::string findDLLPath(const std::string &dllName, const std::string &filePath);
+    void exportTree();
 };
 
 #endif // TREEIMPORTSCONTROLLER_H

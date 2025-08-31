@@ -22,6 +22,7 @@ public:
     // Exports
     void exportToFile(const QString &filename);
     void exportToJson(const QString &filename);
+    void exportToCsv(const QString &filename);
 
 private:
     std::unique_ptr<TreeImportsItem> m_rootItem;
@@ -35,6 +36,10 @@ private:
                          const QString &parentIndent = "",
                          bool isLast = false);
     void exportJsonRecursive(TreeImportsItem *item, QJsonObject &jsonObj);
+    void exportCsvRecursive(TreeImportsItem *item,
+                            QTextStream &out,
+                            int depth,
+                            const QString &parentName);
 };
 
 #endif // TREEIMPORTSMODEL_H

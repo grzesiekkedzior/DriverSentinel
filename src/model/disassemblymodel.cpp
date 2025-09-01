@@ -1,8 +1,7 @@
 #include "model/disassemblymodel.h"
 
-DisassembyModel::DisassembyModel(const QVector<DisassemblyData> &data, QObject *parent)
+DisassembyModel::DisassembyModel(QObject *parent)
     : QAbstractTableModel(parent)
-    , m_disassemblyData(data)
 {}
 
 int DisassembyModel::rowCount(const QModelIndex &parent) const

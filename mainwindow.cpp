@@ -2,6 +2,7 @@
 #include <QObject>
 #include "./ui_mainwindow.h"
 #include "controller/certificatecontroller.h"
+#include "controller/disassemblycontroller.h"
 #include "controller/dosheadercontroller.h"
 #include "controller/drivercontroller.h"
 #include "controller/functioninfocontroller.h"
@@ -134,4 +135,10 @@ void MainWindow::start()
                                        ui->mainTable,
                                        this->ui);
     connect(dt, &DriverToolbar::clearRequested, ohc, &OptionalHeaderController::clear);
+
+    DisassemblyController *dac = new DisassemblyController{QSharedPointer<DisassemblyData>::create(),
+                                                           ui->mainTable,
+                                                           this->ui};
+    connect(dt, &DriverToolbar::clearRequested, dac, &DisassemblyController::clear);
+    ui->tableViewAsm->setModel(dac->disassemblyModel().get());
 }

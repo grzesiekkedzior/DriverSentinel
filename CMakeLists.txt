@@ -92,6 +92,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/data/disassemblydata.h
         include/model/disassemblymodel.h
         src/model/disassemblymodel.cpp
+        include/controller/disassemblycontroller.h
+        src/controller/disassemblycontroller.cpp
 
 
 

@@ -8,7 +8,7 @@ class DisassembyModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    DisassembyModel(const QVector<DisassemblyData> &data, QObject *parent = nullptr);
+    DisassembyModel(QObject *parent = nullptr);
 
     // QAbstractItemModel interface
     enum class DisassemblyColumn { Address, Bytes, Mnemonic, Operands, Comment, ColumnCount };

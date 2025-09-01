@@ -14,6 +14,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Concurrent)
 #find_package(Qt6 REQUIRED COMPONENTS Pdf)
 
+include_directories("C:/Program Files/Capstone/include")
+link_directories("C:/Program Files/Capstone/lib")
+
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     set(CMAKE_PREFIX_PATH "C:/Program Files (x86)/LIEF/lib/cmake")
 else()
@@ -86,6 +89,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/data/optionalheaderinfo.h
         include/controller/optionalheadercontroller.h
         src/controller/optionalheadercontroller.cpp
+        include/data/disassemblydata.h
+        include/model/disassemblymodel.h
+        src/model/disassemblymodel.cpp
 
 
 
@@ -116,6 +122,7 @@ endif()
 target_link_libraries(DriverSentinel PRIVATE Qt${QT_VERSION_MAJOR}::Widgets LIEF::LIEF)
 target_link_libraries(DriverSentinel PRIVATE Version)
 target_link_libraries(DriverSentinel PRIVATE Qt6::Concurrent)
+target_link_libraries(DriverSentinel PRIVATE Qt${QT_VERSION_MAJOR}::Widgets capstone)
 #target_link_libraries(DriverSentinel Qt6::Pdf)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

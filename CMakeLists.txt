@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Concurrent)
+find_package(Qt6 REQUIRED COMPONENTS Core5Compat)
 #find_package(Qt6 REQUIRED COMPONENTS Pdf)
 
 include_directories("C:/Program Files/Capstone/include")
@@ -94,6 +95,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/model/disassemblymodel.cpp
         include/controller/disassemblycontroller.h
         src/controller/disassemblycontroller.cpp
+        include/utils/disassemblydelegate.h
+        src/utils/disassemblydelegate.cpp
 
 
 
@@ -125,6 +128,7 @@ target_link_libraries(DriverSentinel PRIVATE Qt${QT_VERSION_MAJOR}::Widgets LIEF
 target_link_libraries(DriverSentinel PRIVATE Version)
 target_link_libraries(DriverSentinel PRIVATE Qt6::Concurrent)
 target_link_libraries(DriverSentinel PRIVATE Qt${QT_VERSION_MAJOR}::Widgets capstone)
+target_link_libraries(DriverSentinel PRIVATE Qt6::Core5Compat)
 #target_link_libraries(DriverSentinel Qt6::Pdf)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

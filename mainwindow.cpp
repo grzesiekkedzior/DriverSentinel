@@ -15,6 +15,7 @@
 #include "data/stringinfo.h"
 #include "model/stringfilterproxymodel.h"
 #include "toolbar/drivertoolbar.h"
+#include "utils/disassemblydelegate.h"
 #include <data/dosheader.h>
 #include <data/optionalheaderinfo.h>
 
@@ -141,4 +142,6 @@ void MainWindow::start()
                                                            this->ui};
     connect(dt, &DriverToolbar::clearRequested, dac, &DisassemblyController::clear);
     ui->tableViewAsm->setModel(dac->disassemblyModel().get());
+    ui->tableViewAsm->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+    ui->tableViewAsm->verticalHeader()->setDefaultSectionSize(20);
 }

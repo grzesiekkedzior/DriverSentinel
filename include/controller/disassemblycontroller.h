@@ -9,6 +9,7 @@
 #include "capstone/capstone.h"
 #include "data/disassemblydata.h"
 #include "model/disassemblymodel.h"
+#include "utils/disassemblydelegate.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,6 +34,7 @@ public slots:
     void updateModel(const QVector<DisassemblyData> &dd);
     void setDialect(csh handle, AsmDialect dialect);
     void onDialectChanged(int index);
+    void turnOnOffColorSyntax(bool syntax);
 
 private:
     QSharedPointer<DisassemblyData> m_disassemblyData;
@@ -44,6 +46,8 @@ private:
     QFuture<QVector<DisassemblyData>> extractAsm(QString filePath,
                                                  QProgressBar *progress,
                                                  AsmDialect dialect);
+
+    DisassemblyDelegate *m_delegate;
 };
 
 #endif // DISASSEMBLYCONTROLLER_H

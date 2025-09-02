@@ -485,7 +485,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>906</width>
+              <width>908</width>
               <height>530</height>
              </rect>
             </property>
@@ -926,7 +926,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>906</width>
+              <width>908</width>
               <height>827</height>
              </rect>
             </property>
@@ -1596,9 +1596,6 @@
         <layout class="QVBoxLayout" name="verticalLayout_11">
          <item>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="1">
-            <widget class="QComboBox" name="dialectComboBox"/>
-           </item>
            <item row="0" column="0">
             <spacer name="horizontalSpacer_2">
              <property name="orientation">
@@ -1611,6 +1608,19 @@
               </size>
              </property>
             </spacer>
+           </item>
+           <item row="0" column="2">
+            <widget class="QComboBox" name="dialectComboBox"/>
+           </item>
+           <item row="0" column="1">
+            <widget class="QRadioButton" name="radioButtonColorSyntax">
+             <property name="text">
+              <string>Colorize</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -1643,7 +1653,7 @@
      <x>0</x>
      <y>0</y>
      <width>975</width>
-     <height>26</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

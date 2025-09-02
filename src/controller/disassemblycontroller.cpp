@@ -14,6 +14,8 @@ DisassemblyController::DisassemblyController(QSharedPointer<DisassemblyData> dis
     , m_ui(ui)
 {
     m_disassemblyModel = QSharedPointer<DisassemblyModel>::create();
+    m_delegate = new DisassemblyDelegate(m_ui->tableViewAsm);
+    m_ui->tableViewAsm->setItemDelegate(m_delegate);
     connect(m_mainTableView,
             &QTableView::clicked,
             this,
@@ -22,8 +24,12 @@ DisassemblyController::DisassemblyController(QSharedPointer<DisassemblyData> dis
             QOverload<int>::of(&QComboBox::activated),
             this,
             &DisassemblyController::onDialectChanged);
+    connect(m_ui->radioButtonColorSyntax,
+            &QRadioButton::clicked,
+            this,
+            &DisassemblyController::turnOnOffColorSyntax);
 
-    m_ui->tableViewAsm->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    //m_ui->tableViewAsm->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     m_ui->dialectComboBox->addItem("Intel", AsmDialect::DIALECT_INTEL);
     m_ui->dialectComboBox->addItem("AT&T", AsmDialect::DIALECT_ATT);
     m_ui->dialectComboBox->addItem("MASM", AsmDialect::DIALECT_MASM);
@@ -111,6 +117,15 @@ void DisassemblyController::onDialectChanged(int index)
     Q_UNUSED(index);
     QModelIndex currentIndex = m_mainTableView->currentIndex();
     loadAssemblyDataToView(currentIndex);
+}
+
+void DisassemblyController::turnOnOffColorSyntax(bool syntax)
+{
+    qDebug() << "Syntax: " << syntax;
+    if (m_delegate)
+        m_delegate->setSyntaxColoring(syntax);
+
+    m_ui->tableViewAsm->viewport()->update();
 }
 
 QFuture<QVector<DisassemblyData>> DisassemblyController::extractAsm(QString filePath,

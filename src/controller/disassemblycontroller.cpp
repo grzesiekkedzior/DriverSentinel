@@ -18,6 +18,11 @@ DisassemblyController::DisassemblyController(QSharedPointer<DisassemblyData> dis
             &QTableView::clicked,
             this,
             &DisassemblyController::loadAssemblyDataToView);
+    connect(m_ui->dialectComboBox,
+            QOverload<int>::of(&QComboBox::activated),
+            this,
+            &DisassemblyController::onDialectChanged);
+
     m_ui->tableViewAsm->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     m_ui->dialectComboBox->addItem("Intel", AsmDialect::DIALECT_INTEL);
     m_ui->dialectComboBox->addItem("AT&T", AsmDialect::DIALECT_ATT);
@@ -99,6 +104,13 @@ void DisassemblyController::setDialect(csh handle, AsmDialect dialect)
         cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_INTEL);
         break;
     }
+}
+
+void DisassemblyController::onDialectChanged(int index)
+{
+    Q_UNUSED(index);
+    QModelIndex currentIndex = m_mainTableView->currentIndex();
+    loadAssemblyDataToView(currentIndex);
 }
 
 QFuture<QVector<DisassemblyData>> DisassemblyController::extractAsm(QString filePath,

@@ -32,6 +32,7 @@ public slots:
     void clear();
     void updateModel(const QVector<DisassemblyData> &dd);
     void setDialect(csh handle, AsmDialect dialect);
+    void onDialectChanged(int index);
 
 private:
     QSharedPointer<DisassemblyData> m_disassemblyData;

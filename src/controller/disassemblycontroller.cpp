@@ -3,7 +3,6 @@
 #include "ui_mainwindow.h"
 #include "utils/peutils.h"
 #include <LIEF/PE.hpp>
-#include <capstone/capstone.h>
 
 DisassemblyController::DisassemblyController(QSharedPointer<DisassemblyData> disassemblyData,
                                              QTableView *mainTableView,
@@ -20,6 +19,10 @@ DisassemblyController::DisassemblyController(QSharedPointer<DisassemblyData> dis
             this,
             &DisassemblyController::loadAssemblyDataToView);
     m_ui->tableViewAsm->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    m_ui->dialectComboBox->addItem("Intel", AsmDialect::DIALECT_INTEL);
+    m_ui->dialectComboBox->addItem("AT&T", AsmDialect::DIALECT_ATT);
+    m_ui->dialectComboBox->addItem("MASM", AsmDialect::DIALECT_MASM);
+    m_ui->dialectComboBox->addItem("NoRegName", AsmDialect::DIALECT_NOREGNAME);
 }
 
 void DisassemblyController::loadAssemblyDataToView(const QModelIndex &index)
@@ -40,7 +43,10 @@ void DisassemblyController::loadAssemblyDataToView(const QModelIndex &index)
 
     m_ui->statusbar->showMessage("Starting disassembly...");
 
-    QFuture<QVector<DisassemblyData>> future = extractAsm(filePath, progress);
+    QFuture<QVector<DisassemblyData>> future
+        = extractAsm(filePath,
+                     progress,
+                     static_cast<AsmDialect>(m_ui->dialectComboBox->currentData().toInt()));
 
     auto watcher = new QFutureWatcher<QVector<DisassemblyData>>(this);
 
@@ -74,10 +80,32 @@ void DisassemblyController::updateModel(const QVector<DisassemblyData> &dd)
         m_disassemblyModel->setAsmDataView(dd);
 }
 
-QFuture<QVector<DisassemblyData>> DisassemblyController::extractAsm(QString filePath,
-                                                                    QProgressBar *progress)
+void DisassemblyController::setDialect(csh handle, AsmDialect dialect)
 {
-    return QtConcurrent::run([this, filePath, progress]() {
+    switch (dialect) {
+    case DIALECT_INTEL:
+        cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_INTEL);
+        break;
+    case DIALECT_ATT:
+        cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_ATT);
+        break;
+    case DIALECT_MASM:
+        cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_MASM);
+        break;
+    case DIALECT_NOREGNAME:
+        cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_NOREGNAME);
+        break;
+    default:
+        cs_option(handle, CS_OPT_SYNTAX, CS_OPT_SYNTAX_INTEL);
+        break;
+    }
+}
+
+QFuture<QVector<DisassemblyData>> DisassemblyController::extractAsm(QString filePath,
+                                                                    QProgressBar *progress,
+                                                                    AsmDialect dialect)
+{
+    return QtConcurrent::run([this, filePath, progress, dialect]() {
         QVector<DisassemblyData> l_disassemblerData;
 
         try {
@@ -103,8 +131,9 @@ QFuture<QVector<DisassemblyData>> DisassemblyController::extractAsm(QString file
                                    + binary->optional_header().imagebase();
 
                 csh handle;
-                if (cs_open(CS_ARCH_X86, mode, &handle) != CS_ERR_OK)
-                    continue;
+                cs_open(CS_ARCH_X86, mode, &handle);
+
+                setDialect(handle, dialect);
 
                 cs_insn *insn = nullptr;
                 size_t count = cs_disasm(handle, content.data(), content.size(), address, 0, &insn);

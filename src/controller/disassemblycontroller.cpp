@@ -145,6 +145,8 @@ QFuture<QVector<DisassemblyData>> DisassemblyController::extractAsm(QString file
                 csh handle;
                 cs_open(CS_ARCH_X86, mode, &handle);
 
+                cs_option(handle, CS_OPT_DETAIL, CS_OPT_ON);
+
                 setDialect(handle, dialect);
 
                 cs_insn *insn = nullptr;
@@ -159,9 +161,121 @@ QFuture<QVector<DisassemblyData>> DisassemblyController::extractAsm(QString file
                                                 insn[i].size);
                         dasm.mnemonic = QString::fromUtf8(insn[i].mnemonic);
                         dasm.operands = QString::fromUtf8(insn[i].op_str);
-                        dasm.comment = "";
+                        QString comment;
 
+                        if (insn[i].detail) {
+                            cs_x86 *x86 = &insn[i].detail->x86;
+
+                            switch (insn[i].id) {
+                            case X86_INS_JMP:
+                                comment += "Jump instruction; ";
+                                break;
+                            case X86_INS_JE:
+                                comment += "Jump if equal; ";
+                                break;
+                            case X86_INS_JNE:
+                                comment += "Jump if not equal; ";
+                                break;
+                            case X86_INS_JG:
+                                comment += "Jump if greater; ";
+                                break;
+                            case X86_INS_JGE:
+                                comment += "Jump if greater or equal; ";
+                                break;
+                            case X86_INS_JL:
+                                comment += "Jump if less; ";
+                                break;
+                            case X86_INS_JLE:
+                                comment += "Jump if less or equal; ";
+                                break;
+                            case X86_INS_JO:
+                                comment += "Jump if overflow; ";
+                                break;
+                            case X86_INS_JS:
+                                comment += "Jump if sign; ";
+                                break;
+                            case X86_INS_CALL:
+                                comment += "Call instruction; ";
+                                break;
+                            case X86_INS_RET:
+                                comment += "Return instruction; ";
+                                break;
+                            case X86_INS_INT:
+                                comment += "Interrupt; ";
+                                break;
+                            case X86_INS_PUSH:
+                                comment += "Push to stack; ";
+                                break;
+                            case X86_INS_POP:
+                                comment += "Pop from stack; ";
+                                break;
+                            case X86_INS_CMP:
+                                comment += "Compare; ";
+                                break;
+                            default:
+                                comment += "Instruction; ";
+                                break;
+                            }
+
+                            // jump addresses
+                            if (insn[i].id == X86_INS_CALL || insn[i].id == X86_INS_JMP
+                                || (insn[i].id >= X86_INS_JE && insn[i].id <= X86_INS_JS)) {
+                                if (x86->op_count > 0) {
+                                    const cs_x86_op &op = x86->operands[0];
+                                    if (op.type == X86_OP_IMM) {
+                                        comment += QString("Target: 0x%1; ").arg(op.imm, 0, 16);
+                                    } else if (op.type == X86_OP_REG) {
+                                        comment += QString("Register target: %1; ")
+                                                       .arg(cs_reg_name(handle, op.reg));
+                                    }
+                                }
+                            }
+
+                            if (x86->op_count > 0) {
+                                comment += "Operands: ";
+                                for (int op_idx = 0; op_idx < x86->op_count; op_idx++) {
+                                    const cs_x86_op &op = x86->operands[op_idx];
+                                    switch (op.type) {
+                                    case X86_OP_REG:
+                                        comment += QString("%1 ").arg(cs_reg_name(handle, op.reg));
+                                        break;
+                                    case X86_OP_IMM:
+                                        if (op.size == 1)
+                                            comment += QString("0x%1(byte) ").arg(op.imm, 0, 16);
+                                        else if (op.size == 2)
+                                            comment += QString("0x%1(word) ").arg(op.imm, 0, 16);
+                                        else if (op.size == 4)
+                                            comment += QString("0x%1(dword) ").arg(op.imm, 0, 16);
+                                        else if (op.size == 8)
+                                            comment += QString("0x%1(qword) ").arg(op.imm, 0, 16);
+                                        break;
+                                    case X86_OP_MEM:
+                                        comment += "[";
+                                        if (op.mem.base != X86_REG_INVALID)
+                                            comment += cs_reg_name(handle, op.mem.base);
+                                        if (op.mem.index != X86_REG_INVALID)
+                                            comment += QString("+%1*%2")
+                                                           .arg(cs_reg_name(handle, op.mem.index))
+                                                           .arg(op.mem.scale);
+                                        if (op.mem.disp != 0)
+                                            comment += QString("+0x%1").arg(op.mem.disp, 0, 16);
+                                        comment += "] ";
+                                        break;
+                                    default:
+                                        comment += "other ";
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        dasm.comment = comment.trimmed();
                         l_disassemblerData.append(dasm);
+
+                        // qDebug() << "Section:" << dasm.section
+                        //          << "Address:" << QString::number(dasm.address, 16)
+                        //          << "Mnemonic:" << dasm.mnemonic << "Operands:" << dasm.operands
+                        //          << "Comment:" << dasm.comment << "Bytes:" << dasm.bytes.toHex();
                     }
                     cs_free(insn, count);
                 }

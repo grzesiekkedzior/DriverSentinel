@@ -1,7 +1,9 @@
 #ifndef DISASSEMBLYCONTROLLER_H
 #define DISASSEMBLYCONTROLLER_H
 
+#include <QFuture>
 #include <QObject>
+#include <QProgressBar>
 #include <QSharedPointer>
 #include <QTableView>
 #include "data/disassemblydata.h"
@@ -20,17 +22,21 @@ public:
                           Ui::MainWindow *ui,
                           QObject *parent = nullptr);
 
-    QSharedPointer<DisassembyModel> disassemblyModel() const;
+    QSharedPointer<DisassemblyModel> disassemblyModel() const;
 
 public slots:
-    void loadAsemblyDataToView(const QModelIndex &index);
+    void loadAssemblyDataToView(const QModelIndex &index);
     void clear();
+    void updateModel(const QVector<DisassemblyData> &dd);
 
 private:
     QSharedPointer<DisassemblyData> m_disassemblyData;
-    QSharedPointer<DisassembyModel> m_disassemblyModel;
+    QSharedPointer<DisassemblyModel> m_disassemblyModel;
     QTableView *m_mainTableView{};
     Ui::MainWindow *m_ui;
+
+    void loadAsemblyDataTo(const QModelIndex &index);
+    QFuture<QVector<DisassemblyData>> extractAsm(QString filePath, QProgressBar *progress);
 };
 
 #endif // DISASSEMBLYCONTROLLER_H

@@ -5,6 +5,7 @@
 
 struct DisassemblyData
 {
+    QString section;
     uint64_t address;
     QByteArray bytes;
     QString mnemonic;

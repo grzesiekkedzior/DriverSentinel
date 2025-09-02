@@ -1,4 +1,9 @@
 #include "controller/disassemblycontroller.h"
+#include <QtConcurrent>
+#include "ui_mainwindow.h"
+#include "utils/peutils.h"
+#include <LIEF/PE.hpp>
+#include <capstone/capstone.h>
 
 DisassemblyController::DisassemblyController(QSharedPointer<DisassemblyData> disassemblyData,
                                              QTableView *mainTableView,
@@ -9,24 +14,140 @@ DisassemblyController::DisassemblyController(QSharedPointer<DisassemblyData> dis
     , m_mainTableView(mainTableView)
     , m_ui(ui)
 {
-    m_disassemblyModel = QSharedPointer<DisassembyModel>::create();
+    m_disassemblyModel = QSharedPointer<DisassemblyModel>::create();
     connect(m_mainTableView,
             &QTableView::clicked,
             this,
-            &DisassemblyController::loadAsemblyDataToView);
+            &DisassemblyController::loadAssemblyDataToView);
+    m_ui->tableViewAsm->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
-void DisassemblyController::loadAsemblyDataToView(const QModelIndex &index)
+void DisassemblyController::loadAssemblyDataToView(const QModelIndex &index)
 {
-    qDebug() << "Hello asm";
+    if (!index.isValid())
+        return;
+
+    QString filePath = PEUtils::getPEfilePath(m_ui->mainTable, index);
+    if (filePath.isEmpty()) {
+        qWarning() << "File path is empty";
+        return;
+    }
+
+    auto *progress = new QProgressBar;
+    progress->setRange(0, 100);
+    progress->setValue(0);
+    m_ui->statusbar->addPermanentWidget(progress);
+
+    m_ui->statusbar->showMessage("Starting disassembly...");
+
+    QFuture<QVector<DisassemblyData>> future = extractAsm(filePath, progress);
+
+    auto watcher = new QFutureWatcher<QVector<DisassemblyData>>(this);
+
+    connect(watcher,
+            &QFutureWatcher<QVector<DisassemblyData>>::finished,
+            this,
+            [this, watcher, progress]() {
+                QVector<DisassemblyData> result = watcher->result();
+                updateModel(result);
+
+                m_ui->statusbar->showMessage("Disassembly finished.", 5000);
+                m_ui->statusbar->removeWidget(progress);
+                progress->deleteLater();
+
+                watcher->deleteLater();
+            });
+
+    watcher->setFuture(future);
 }
 
 void DisassemblyController::clear()
 {
     qDebug() << "Hello asm clear function";
+    if (m_disassemblyModel)
+        m_disassemblyModel->clearModel();
 }
 
-QSharedPointer<DisassembyModel> DisassemblyController::disassemblyModel() const
+void DisassemblyController::updateModel(const QVector<DisassemblyData> &dd)
+{
+    if (m_disassemblyModel)
+        m_disassemblyModel->setAsmDataView(dd);
+}
+
+QFuture<QVector<DisassemblyData>> DisassemblyController::extractAsm(QString filePath,
+                                                                    QProgressBar *progress)
+{
+    return QtConcurrent::run([this, filePath, progress]() {
+        QVector<DisassemblyData> l_disassemblerData;
+
+        try {
+            std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(
+                filePath.toStdString());
+            if (!binary)
+                return QVector<DisassemblyData>{};
+
+            LIEF::PE::Header::MACHINE_TYPES machine = binary->header().machine();
+            cs_mode mode = (machine == LIEF::PE::Header::MACHINE_TYPES::AMD64) ? CS_MODE_64
+                                                                               : CS_MODE_32;
+
+            const auto &sections = binary->sections();
+            int totalSections = sections.size();
+            int sectionIndex = 0;
+
+            for (const auto &section : sections) {
+                auto content = section.content();
+                if (content.empty())
+                    continue;
+
+                uint64_t address = section.virtual_address()
+                                   + binary->optional_header().imagebase();
+
+                csh handle;
+                if (cs_open(CS_ARCH_X86, mode, &handle) != CS_ERR_OK)
+                    continue;
+
+                cs_insn *insn = nullptr;
+                size_t count = cs_disasm(handle, content.data(), content.size(), address, 0, &insn);
+
+                if (count > 0) {
+                    for (size_t i = 0; i < count; i++) {
+                        DisassemblyData dasm;
+                        dasm.section = QString::fromStdString(section.name());
+                        dasm.address = insn[i].address;
+                        dasm.bytes = QByteArray(reinterpret_cast<const char *>(insn[i].bytes),
+                                                insn[i].size);
+                        dasm.mnemonic = QString::fromUtf8(insn[i].mnemonic);
+                        dasm.operands = QString::fromUtf8(insn[i].op_str);
+                        dasm.comment = "";
+
+                        l_disassemblerData.append(dasm);
+                    }
+                    cs_free(insn, count);
+                }
+
+                cs_close(&handle);
+
+                // Progress actualization
+                if (progress) {
+                    int value = static_cast<int>((++sectionIndex * 100) / totalSections);
+                    QMetaObject::invokeMethod(progress,
+                                              "setValue",
+                                              Qt::QueuedConnection,
+                                              Q_ARG(int, value));
+                }
+            }
+
+        } catch (const std::exception &e) {
+            qWarning() << "LIEF error:" << e.what();
+        } catch (...) {
+            qWarning() << "Unknown error while parsing PE";
+        }
+
+        return l_disassemblerData;
+    });
+}
+
+QSharedPointer<DisassemblyModel> DisassemblyController::disassemblyModel() const
 {
     return m_disassemblyModel;
 }

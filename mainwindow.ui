@@ -485,7 +485,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>908</width>
+              <width>906</width>
               <height>530</height>
              </rect>
             </property>
@@ -926,7 +926,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>908</width>
+              <width>906</width>
               <height>827</height>
              </rect>
             </property>
@@ -1595,7 +1595,20 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_11">
          <item>
-          <widget class="QTableView" name="tableViewAsm"/>
+          <widget class="QTableView" name="tableViewAsm">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+           <attribute name="horizontalHeaderStretchLastSection">
+            <bool>true</bool>
+           </attribute>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -1610,7 +1623,7 @@
      <x>0</x>
      <y>0</y>
      <width>975</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>

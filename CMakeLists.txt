@@ -97,6 +97,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/controller/disassemblycontroller.cpp
         include/utils/disassemblydelegate.h
         src/utils/disassemblydelegate.cpp
+        include/data/richhdrdata.h
+        include/model/richhdrmodel.h
+        src/model/richhdrmodel.cpp
+        include/controller/richhdrcontroller.h
+        src/controller/richhdrcontroller.cpp
 
 
 

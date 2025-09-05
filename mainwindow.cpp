@@ -8,6 +8,7 @@
 #include "controller/functioninfocontroller.h"
 #include "controller/generalcontroller.h"
 #include "controller/optionalheadercontroller.h"
+#include "controller/richhdrcontroller.h"
 #include "controller/sectioninfocontroller.h"
 #include "controller/stringinfocontroller.h"
 #include "controller/stringtoolboxcontroller.h"
@@ -144,4 +145,8 @@ void MainWindow::start()
     ui->tableViewAsm->setModel(dac->disassemblyModel().get());
     ui->tableViewAsm->verticalHeader()->setSectionResizeMode(QHeaderView::Fixed);
     ui->tableViewAsm->verticalHeader()->setDefaultSectionSize(20);
+
+    RichHeaderController *rhc = new RichHeaderController{ui->mainTable, this->ui};
+    ui->richHdrTableView->setModel(rhc->richHdrModel().get());
+    connect(dt, &DriverToolbar::clearRequested, rhc, &RichHeaderController::clear);
 }

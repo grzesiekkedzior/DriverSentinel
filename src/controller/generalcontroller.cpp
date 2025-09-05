@@ -149,6 +149,7 @@ void GeneralController::loadGeneralInfo(const QModelIndex &index)
     try {
         std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(filePath.toStdString());
         if (binary) {
+            binary->rich_header();
             if (binary->has_resources()) {
                 const auto &rm = binary->resources_manager();
                 if (rm->has_version()) {

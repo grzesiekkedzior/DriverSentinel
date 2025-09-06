@@ -28,9 +28,9 @@ QVariant RichHdrModel::data(const QModelIndex &index, int role) const
 
     switch (column) {
     case RichHeaderColumn::Offset:
-        return QString("0x%1").arg(rhd.offset, 0, 16).toUpper();
+        return QString("0x%1").arg(rhd.offset, 0, 16).toUpper().replace('X', 'x');
     case RichHeaderColumn::Key:
-        return QString("0x%1").arg(rhd.key, 0, 16).toUpper();
+        return QString("0x%1").arg(rhd.key, 0, 16).toUpper().replace('X', 'x');
     case RichHeaderColumn::ProductID:
         return rhd.product_id;
     case RichHeaderColumn::BuildID:
@@ -40,7 +40,7 @@ QVariant RichHdrModel::data(const QModelIndex &index, int role) const
     // case RichHeaderColumn::VSVersion:
     //     return rhd.vsVersion;
     case RichHeaderColumn::RawValue:
-        return QString("0x%1").arg(rhd.rawValue, 0, 16).toUpper();
+        return QString("0x%1").arg(rhd.rawValue, 0, 16).toUpper().replace('X', 'x');
     case RichHeaderColumn::UnmaskedValue:
         return QString("0x%1").arg(QString::number(rhd.unmaskedValue, 16).toUpper());
 

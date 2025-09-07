@@ -39,6 +39,7 @@ private:
 
     // QAbstractItemModel interface
 public:
+    QVector<DebugInfo> debugInfo() const;
 };
 
 #endif // DEBUGINFOMODEL_H

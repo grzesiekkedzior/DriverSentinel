@@ -97,3 +97,8 @@ void DebugInfoModel::clear()
     m_debugInfo.clear();
     endResetModel();
 }
+
+QVector<DebugInfo> DebugInfoModel::debugInfo() const
+{
+    return m_debugInfo;
+}

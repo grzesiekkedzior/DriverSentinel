@@ -9,12 +9,12 @@ namespace Ui {
 class MainWindow;
 }
 
-class DebugInfoController : public QObject
+class DebugInfoController : public QWidget
 {
     Q_OBJECT
 
 public:
-    DebugInfoController(QTableView *mainTableView, Ui::MainWindow *ui, QObject *parent = nullptr);
+    DebugInfoController(QTableView *mainTableView, Ui::MainWindow *ui, QWidget *parent = nullptr);
 
     QSharedPointer<DebugInfo> debugInfo() const;
 
@@ -30,6 +30,8 @@ private:
     QSharedPointer<DebugInfoModel> m_debugInfoModel;
     QTableView *m_mainTableView{};
     Ui::MainWindow *m_ui;
+    void openPayloadDialog(int row);
+    QString formatHexPayload(const QByteArray &payload);
 };
 
 #endif // DEBUGINFOCONTROLLER_H

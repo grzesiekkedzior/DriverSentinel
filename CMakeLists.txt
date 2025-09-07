@@ -102,6 +102,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/model/richhdrmodel.cpp
         include/controller/richhdrcontroller.h
         src/controller/richhdrcontroller.cpp
+        include/data/debuginfo.h
+        include/model/debuginfomodel.h
+        src/model/debuginfomodel.cpp
+        include/controller/debuginfocontroller.h
+        src/controller/debuginfocontroller.cpp
 
 
 

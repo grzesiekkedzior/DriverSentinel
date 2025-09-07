@@ -2,6 +2,7 @@
 #include <QObject>
 #include "./ui_mainwindow.h"
 #include "controller/certificatecontroller.h"
+#include "controller/debuginfocontroller.h"
 #include "controller/disassemblycontroller.h"
 #include "controller/dosheadercontroller.h"
 #include "controller/drivercontroller.h"
@@ -149,4 +150,8 @@ void MainWindow::start()
     RichHeaderController *rhc = new RichHeaderController{ui->mainTable, this->ui};
     ui->richHdrTableView->setModel(rhc->richHdrModel().get());
     connect(dt, &DriverToolbar::clearRequested, rhc, &RichHeaderController::clear);
+
+    DebugInfoController *dic = new DebugInfoController{ui->mainTable, this->ui};
+    ui->debugInfotableView->setModel(dic->debugInfoModel().get());
+    connect(dt, &DriverToolbar::clearRequested, dic, &DebugInfoController::clear);
 }

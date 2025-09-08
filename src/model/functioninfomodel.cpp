@@ -103,7 +103,7 @@ QVariant FunctionInfoModel::headerData(int section, Qt::Orientation orientation,
     case FunctionColumn::ILT_Value:
         return "ILT Value";
     case FunctionColumn::IsOrdinal:
-        return "Ordinal?";
+        return "Ordinal";
     case FunctionColumn::Hint:
         return "Hint";
     case FunctionColumn::HintNameRVA:

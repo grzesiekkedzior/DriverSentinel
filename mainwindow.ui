@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>975</width>
+    <width>1125</width>
     <height>731</height>
    </rect>
   </property>
@@ -39,7 +39,7 @@
       </widget>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>9</number>
+        <number>10</number>
        </property>
        <widget class="QWidget" name="general">
         <attribute name="title">
@@ -485,7 +485,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>906</width>
+              <width>1058</width>
               <height>530</height>
              </rect>
             </property>
@@ -926,7 +926,7 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>906</width>
+              <width>1058</width>
               <height>827</height>
              </rect>
             </property>
@@ -1666,6 +1666,16 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="exeption">
+        <attribute name="title">
+         <string>Exception</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_14">
+         <item>
+          <widget class="QTableView" name="exceptionTableView"/>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -1676,8 +1686,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>975</width>
-     <height>26</height>
+     <width>1125</width>
+     <height>25</height>
     </rect>
    </property>
   </widget>

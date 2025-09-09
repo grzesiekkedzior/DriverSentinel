@@ -6,6 +6,7 @@
 #include "controller/disassemblycontroller.h"
 #include "controller/dosheadercontroller.h"
 #include "controller/drivercontroller.h"
+#include "controller/exceptioncontroller.h"
 #include "controller/functioninfocontroller.h"
 #include "controller/generalcontroller.h"
 #include "controller/optionalheadercontroller.h"
@@ -154,4 +155,8 @@ void MainWindow::start()
     DebugInfoController *dic = new DebugInfoController{ui->mainTable, this->ui};
     ui->debugInfotableView->setModel(dic->debugInfoModel().get());
     connect(dt, &DriverToolbar::clearRequested, dic, &DebugInfoController::clear);
+
+    ExceptionController *exc = new ExceptionController{ui->mainTable, this->ui};
+    ui->exceptionTableView->setModel(exc->exceptionModel().get());
+    connect(dt, &DriverToolbar::clearRequested, exc, &ExceptionController::clear);
 }

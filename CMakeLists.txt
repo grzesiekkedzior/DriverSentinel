@@ -107,6 +107,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/model/debuginfomodel.cpp
         include/controller/debuginfocontroller.h
         src/controller/debuginfocontroller.cpp
+        include/data/exceptioninfo.h
+        include/model/exceptionmodel.h
+        src/model/exceptionmodel.cpp
+        include/controller/exceptioncontroller.h
+        src/controller/exceptioncontroller.cpp
 
 
 

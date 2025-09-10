@@ -1,4 +1,6 @@
 #include "controller/exceptioncontroller.h"
+#include <QFutureWatcher>
+#include <QtConcurrent>
 #include "ui_mainwindow.h"
 #include "utils/peutils.h"
 #include <LIEF/PE.hpp>
@@ -94,6 +96,7 @@ QString unwindOpToString(const ExceptionInfo::UnwindOp &uop)
         .arg(uop.opinfo)
         .arg(uop.regName.isEmpty() ? "-" : uop.regName);
 }
+
 void ExceptionController::loadExceptionInfo(const QModelIndex &index)
 {
     if (!index.isValid())
@@ -105,59 +108,69 @@ void ExceptionController::loadExceptionInfo(const QModelIndex &index)
         return;
     }
 
-    try {
-        LIEF::PE::ParserConfig cfg;
-        cfg.parse_exceptions = true;
-        std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(filePath.toStdString(),
-                                                                           cfg);
-        if (!binary) {
-            qWarning() << "Failed to parse PE file";
-            return;
-        }
+    auto *watcher = new QFutureWatcher<QVector<ExceptionInfo>>(this);
 
-        QVector<ExceptionInfo> vec;
+    connect(watcher, &QFutureWatcher<QVector<ExceptionInfo>>::finished, this, [this, watcher]() {
+        QVector<ExceptionInfo> result = watcher->result();
+        updateModel(result);
+        watcher->deleteLater();
+    });
 
-        for (auto &ex : binary->exceptions()) {
-            if (auto rf = ex.as<LIEF::PE::RuntimeFunctionX64>()) {
-                ExceptionInfo exInfo;
-                exInfo.beginRVA = rf->rva_start();
-                exInfo.endRVA = rf->rva_end();
-                exInfo.unwindRVA = rf->unwind_rva();
+    QFuture<QVector<ExceptionInfo>> future = QtConcurrent::run(
+        [filePath]() -> QVector<ExceptionInfo> {
+            QVector<ExceptionInfo> vec;
 
-                if (auto ui = rf->unwind_info()) {
-                    exInfo.version = ui->version;
-                    exInfo.flags = ui->flags;
-                    exInfo.sizeOfProlog = ui->sizeof_prologue;
-                    exInfo.countOfCodes = ui->count_opcodes;
-                    exInfo.frameRegister = ui->frame_reg;
-                    exInfo.frameOffset = ui->frame_reg_offset;
-                    exInfo.exceptionHandlerRVA = ui->handler.value_or(0);
+            try {
+                LIEF::PE::ParserConfig cfg;
+                cfg.parse_exceptions = true;
+                std::unique_ptr<LIEF::PE::Binary> binary
+                    = LIEF::PE::Parser::parse(filePath.toStdString(), cfg);
 
-                    for (const auto &opcode : ui->opcodes()) {
-                        if (auto epilog = dynamic_cast<const LIEF::PE::unwind_x64::Epilog *>(
-                                opcode.get())) {
-                            exInfo.hasEpilog = true;
-                            exInfo.epilogFlags = epilog->flags();
-                            exInfo.epilogSize = epilog->size();
-                        } else {
-                            auto uop = mapOpcode(opcode.get());
-                            //qDebug() << unwindOpToString(uop);
-                            exInfo.unwindOps.append(uop);
+                if (!binary)
+                    return vec;
+
+                for (auto &ex : binary->exceptions()) {
+                    if (auto rf = ex.as<LIEF::PE::RuntimeFunctionX64>()) {
+                        ExceptionInfo exInfo;
+                        exInfo.beginRVA = rf->rva_start();
+                        exInfo.endRVA = rf->rva_end();
+                        exInfo.unwindRVA = rf->unwind_rva();
+
+                        if (auto ui = rf->unwind_info()) {
+                            exInfo.version = ui->version;
+                            exInfo.flags = ui->flags;
+                            exInfo.sizeOfProlog = ui->sizeof_prologue;
+                            exInfo.countOfCodes = ui->count_opcodes;
+                            exInfo.frameRegister = ui->frame_reg;
+                            exInfo.frameOffset = ui->frame_reg_offset;
+                            exInfo.exceptionHandlerRVA = ui->handler.value_or(0);
+
+                            for (const auto &opcode : ui->opcodes()) {
+                                if (auto epilog = dynamic_cast<const LIEF::PE::unwind_x64::Epilog *>(
+                                        opcode.get())) {
+                                    exInfo.hasEpilog = true;
+                                    exInfo.epilogFlags = epilog->flags();
+                                    exInfo.epilogSize = epilog->size();
+                                } else {
+                                    auto uop = mapOpcode(opcode.get());
+                                    exInfo.unwindOps.append(uop);
+                                }
+                            }
                         }
+
+                        vec.append(exInfo);
                     }
                 }
-
-                vec.append(exInfo);
+            } catch (const std::exception &e) {
+                qWarning() << "Exception parsing PE:" << e.what();
+            } catch (...) {
+                qWarning() << "Unknown exception parsing PE";
             }
-        }
 
-        updateModel(vec);
+            return vec;
+        });
 
-    } catch (const std::exception &e) {
-        qWarning() << "Exception parsing PE:" << e.what();
-    } catch (...) {
-        qWarning() << "Unknown exception parsing PE";
-    }
+    watcher->setFuture(future);
 }
 
 void ExceptionController::updateModel(const QVector<ExceptionInfo> &ei)

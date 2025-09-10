@@ -39,7 +39,7 @@
       </widget>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>10</number>
+        <number>11</number>
        </property>
        <widget class="QWidget" name="general">
         <attribute name="title">
@@ -485,8 +485,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>1064</width>
-              <height>432</height>
+              <width>1058</width>
+              <height>530</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -926,8 +926,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>1064</width>
-              <height>674</height>
+              <width>1058</width>
+              <height>827</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1684,6 +1684,22 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="relocations">
+        <attribute name="title">
+         <string>Relocation</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_15">
+         <item>
+          <widget class="QSplitter" name="splitter_3">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <widget class="QTableView" name="entryRelocationTableView"/>
+           <widget class="QTableView" name="blockRelocationTableView"/>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -1695,7 +1711,7 @@
      <x>0</x>
      <y>0</y>
      <width>1125</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

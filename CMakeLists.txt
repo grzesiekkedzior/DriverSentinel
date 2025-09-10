@@ -112,6 +112,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/model/exceptionmodel.cpp
         include/controller/exceptioncontroller.h
         src/controller/exceptioncontroller.cpp
+        include/data/relocationinfo.h
 
 
 

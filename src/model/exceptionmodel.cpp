@@ -50,8 +50,24 @@ QVariant ExceptionModel::data(const QModelIndex &index, int role) const
                 regs << op.regName;
         return regs.join(", ");
     }
-    case ExceptionColumn::OpcodesDetail:
-        return QString("Click to open (%1 ops)").arg(ei.unwindOps.size());
+    case ExceptionColumn::OpcodesDetail: {
+        QStringList ops;
+        for (const auto &op : ei.unwindOps) {
+            ops << QString("Opcode=%1, Offset=%2, OpInfo=%3, Reg=%4")
+                       .arg(op.opcode)
+                       .arg(op.offset)
+                       .arg(op.opinfo)
+                       .arg(op.regName.isEmpty() ? "-" : op.regName);
+        }
+        return ops.join("\n");
+    }
+
+    case ExceptionColumn::HasEpilog:
+        return ei.hasEpilog ? "Yes" : "No";
+    case ExceptionColumn::EpilogFlags:
+        return QString("0x%1").arg(ei.epilogFlags, 2, 16, QChar('0'));
+    case ExceptionColumn::EpilogSize:
+        return ei.epilogSize;
     default:
         return {};
     }
@@ -85,6 +101,12 @@ QVariant ExceptionModel::headerData(int section, Qt::Orientation orientation, in
         return "Registers Saved";
     case ExceptionColumn::OpcodesDetail:
         return "Opcodes Detail";
+    case ExceptionColumn::HasEpilog:
+        return "Has Epilog";
+    case ExceptionColumn::EpilogFlags:
+        return "Epilog Flags";
+    case ExceptionColumn::EpilogSize:
+        return "Epilog Size";
     default:
         return {};
     }

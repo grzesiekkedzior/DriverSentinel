@@ -18,6 +18,10 @@ struct ExceptionInfo
     quint16 frameOffset = 0;
     quint32 exceptionHandlerRVA = 0;
 
+    bool hasEpilog = false;
+    quint8 epilogFlags = 0;
+    quint8 epilogSize = 0;
+
     struct UnwindOp
     {
         quint8 opcode = 0;

@@ -22,6 +22,9 @@ public:
         CountOfCodes,
         RegistersSaved,
         OpcodesDetail,
+        HasEpilog,
+        EpilogFlags,
+        EpilogSize,
         ColumnCount
     };
 

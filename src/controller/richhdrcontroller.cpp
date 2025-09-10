@@ -1,5 +1,7 @@
 #include "controller/richhdrcontroller.h"
 #include <QFile>
+#include <QFutureWatcher>
+#include <QtConcurrent>
 #include "ui_mainwindow.h"
 #include <LIEF/PE.hpp>
 #include <utils/peutils.h>
@@ -30,132 +32,118 @@ void RichHeaderController::loadRichHeaderDataToView(const QModelIndex &index)
     if (!index.isValid())
         return;
 
-    QVector<RichHeaderData> l_richHeaderData;
-
     QString filePath = PEUtils::getPEfilePath(m_ui->mainTable, index);
     if (filePath.isEmpty()) {
         qWarning() << "File path is empty";
         return;
     }
 
-    try {
-        std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(filePath.toStdString());
-        if (!binary->has_rich_header())
-            return;
+    // Watcher, który odbierze wynik
+    auto *watcher = new QFutureWatcher<QVector<RichHeaderData>>(this);
 
-        const auto &richHeader = binary->rich_header();
-        const quint32 key = richHeader->key();
+    connect(watcher, &QFutureWatcher<QVector<RichHeaderData>>::finished, this, [this, watcher]() {
+        QVector<RichHeaderData> result = watcher->result();
+        updateModel(result);
+        watcher->deleteLater();
+    });
 
-        QFile file(filePath);
-        if (!file.open(QIODevice::ReadOnly)) {
-            qWarning() << "Can't open file:" << filePath;
-            return;
-        }
-        QByteArray fileBytes = file.readAll();
-        file.close();
+    QFuture<QVector<RichHeaderData>> future = QtConcurrent::run([filePath,
+                                                                 this]() -> QVector<RichHeaderData> {
+        QVector<RichHeaderData> l_richHeaderData;
 
-        //std::vector<uint8_t> -> QByteArray
-        QByteArray rawBytes(reinterpret_cast<const char *>(richHeader->raw(key).data()),
-                            static_cast<int>(richHeader->raw(key).size()));
+        try {
+            std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(
+                filePath.toStdString());
+            if (!binary || !binary->has_rich_header())
+                return l_richHeaderData;
 
-        QByteArray unmaskedBytes(reinterpret_cast<const char *>(richHeader->raw(0).data()),
-                                 static_cast<int>(richHeader->raw(0).size()));
+            const auto &richHeader = binary->rich_header();
+            const quint32 key = richHeader->key();
 
-        // "DanS"
-        auto dansOffsetInDecoded = unmaskedBytes.indexOf("DanS");
-        if (dansOffsetInDecoded == -1) {
-            qWarning() << "DanS not found after decryption";
-            return;
-        }
+            QFile file(filePath);
+            if (!file.open(QIODevice::ReadOnly)) {
+                qWarning() << "Can't open file:" << filePath;
+                return l_richHeaderData;
+            }
+            QByteArray fileBytes = file.readAll();
+            file.close();
 
-        // Offset Rich Headera w pliku
-        int richOffsetInFile = fileBytes.indexOf(rawBytes);
-        if (richOffsetInFile == -1) {
-            qWarning() << "Rich Header could not be found in the file";
-            return;
-        }
+            QByteArray rawBytes(reinterpret_cast<const char *>(richHeader->raw(key).data()),
+                                static_cast<int>(richHeader->raw(key).size()));
 
-        // Offset DanS
-        int dansOffset = richOffsetInFile + dansOffsetInDecoded;
+            QByteArray unmaskedBytes(reinterpret_cast<const char *>(richHeader->raw(0).data()),
+                                     static_cast<int>(richHeader->raw(0).size()));
 
-        // Base offset Rich Headera
-        int baseFileOffset = richOffsetInFile;
+            int dansOffsetInDecoded = unmaskedBytes.indexOf("DanS");
+            if (dansOffsetInDecoded == -1) {
+                qWarning() << "DanS not found after decryption";
+                return l_richHeaderData;
+            }
 
-        size_t maxBlocks = rawBytes.size() / 8;
+            int richOffsetInFile = fileBytes.indexOf(rawBytes);
+            if (richOffsetInFile == -1) {
+                qWarning() << "Rich Header could not be found in the file";
+                return l_richHeaderData;
+            }
 
-        for (size_t idx = 0; idx < maxBlocks; ++idx) {
-            size_t i = idx * 8;
+            int baseFileOffset = richOffsetInFile;
+            size_t maxBlocks = rawBytes.size() / 8;
 
-            // build 64-bit value from 8 bytes little-endian
-            quint64 rawEnc64 = 0;
-            quint64 rawUnm64 = 0;
-            for (int b = 0; b < 8; ++b) {
-                rawEnc64 |= static_cast<quint64>(static_cast<uint8_t>(rawBytes[i + b])) << (8 * b);
-                if (i + b < unmaskedBytes.size())
-                    rawUnm64 |= static_cast<quint64>(static_cast<uint8_t>(unmaskedBytes[i + b]))
+            for (size_t idx = 0; idx < maxBlocks; ++idx) {
+                size_t i = idx * 8;
+
+                quint64 rawEnc64 = 0;
+                quint64 rawUnm64 = 0;
+                for (int b = 0; b < 8; ++b) {
+                    rawEnc64 |= static_cast<quint64>(static_cast<uint8_t>(rawBytes[i + b]))
                                 << (8 * b);
+                    if (i + b < unmaskedBytes.size())
+                        rawUnm64 |= static_cast<quint64>(static_cast<uint8_t>(unmaskedBytes[i + b]))
+                                    << (8 * b);
+                }
+
+                quint32 encoded32 = static_cast<quint32>(rawEnc64 & 0xFFFFFFFFu);
+                quint32 encodedForCount32 = static_cast<quint32>(rawEnc64 >> 32);
+
+                quint32 decrypted32 = encoded32 ^ key;
+                quint32 decryptedCount = encodedForCount32 ^ key;
+
+                quint16 product_id = static_cast<quint16>(decrypted32 >> 16);
+                quint16 build_id = static_cast<quint16>(decrypted32 & 0xFFFF);
+                quint32 count32 = static_cast<quint16>(decryptedCount & 0xFFFF);
+
+                quint64 rawValue64 = rawEnc64;
+                quint64 unmaskedValue64 = (static_cast<quint64>(count32) << 32)
+                                          | static_cast<quint64>(decrypted32);
+
+                RichHeaderData data;
+                data.offset = static_cast<quint32>(baseFileOffset + i);
+                data.key = key;
+                data.product_id = getCompilerVersion(product_id);
+                data.buildId = build_id;
+                data.count = count32;
+                data.rawValue = rawValue64;
+                data.unmaskedValue = unmaskedValue64;
+                data.rawData = QByteArray(reinterpret_cast<const char *>(rawBytes.data() + i), 8);
+
+                if (i + 8 <= unmaskedBytes.size()) {
+                    QByteArray tmp(reinterpret_cast<const char *>(unmaskedBytes.data() + i), 8);
+                    std::reverse(tmp.begin(), tmp.end());
+                    data.unmaskedData = tmp;
+                }
+
+                l_richHeaderData.append(data);
             }
-
-            // CORRECT: lower 32 bits = encoded, higher 32 bits = count
-            quint32 encoded32 = static_cast<quint32>(rawEnc64 & 0xFFFFFFFFu);
-            quint32 encodedForCount32 = static_cast<quint32>(rawEnc64 >> 32);
-            // decrypt encoded part (encoded stored in file is ((id<<16)|build) ^ key)
-            quint32 decrypted32 = encoded32 ^ key;
-            quint32 decryptedCount = encodedForCount32 ^ key;
-            // product_id and build_id
-            quint16 product_id = static_cast<quint16>(decrypted32 >> 16);
-            quint16 build_id = static_cast<quint16>(decrypted32 & 0xFFFF);
-            quint32 count32 = static_cast<quint16>(decryptedCount & 0xFFFF);
-
-            // Build 64-bit presentations
-            quint64 rawValue64 = rawEnc64; // as read from file (encoded)
-            quint64 unmaskedValue64 = (static_cast<quint64>(count32) << 32)
-                                      | static_cast<quint64>(decrypted32);
-
-            // prepare struct
-            RichHeaderData data;
-            data.offset = static_cast<quint32>(baseFileOffset + i);
-            data.key = key;
-            qDebug() << "productid: " << product_id;
-            data.product_id = getCompilerVersion(product_id);
-            data.buildId = build_id;
-            data.count = count32;
-            data.rawValue = rawValue64;
-            data.unmaskedValue = unmaskedValue64;
-            data.rawData = QByteArray(reinterpret_cast<const char *>(rawBytes.data() + i), 8);
-            if (i + 8 <= unmaskedBytes.size()) {
-                QByteArray tmp(reinterpret_cast<const char *>(unmaskedBytes.data() + i), 8);
-                std::reverse(tmp.begin(), tmp.end());
-                data.unmaskedData = tmp;
-            } else {
-                data.unmaskedData.clear();
-            }
-
-            // debug output (hex)
-            QString rawHex = data.rawData.toHex().toUpper();
-            QString unmHex = data.unmaskedData.isEmpty() ? QString()
-                                                         : data.unmaskedData.toHex().toUpper();
-            QString rawValStr = QString("0x%1").arg(QString::number(rawValue64, 16).toUpper());
-            QString unmValStr = QString("0x%1").arg(QString::number(unmaskedValue64, 16).toUpper());
-
-            qDebug().noquote() << QString("fileOffset=0x%1")
-                                      .arg(data.offset, 8, 16, QChar('0'))
-                                      .toUpper()
-                               << rawHex << "Raw64(enc)=" << rawValStr << "Unmasked64=" << unmValStr
-                               << " => ID:" << product_id << "Build:" << build_id
-                               << "Count:" << count32;
-
-            l_richHeaderData.append(data);
+        } catch (const std::exception &e) {
+            qWarning() << "LIEF error:" << e.what();
+        } catch (...) {
+            qWarning() << "Unknown error while parsing PE";
         }
 
-    } catch (const std::exception &e) {
-        qWarning() << "LIEF error:" << e.what();
-    } catch (...) {
-        qWarning() << "Unknown error while parsing PE";
-    }
+        return l_richHeaderData;
+    });
 
-    // Update the model to display in QTableView
-    updateModel(l_richHeaderData);
+    watcher->setFuture(future);
 }
 
 void RichHeaderController::clear()

@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QTableView>
 
+#include <LIEF/PE/Binary.hpp>
+
 #include "data/exceptioninfo.h"
 #include "model/exceptionmodel.h"
 namespace Ui {
@@ -29,6 +31,8 @@ private:
     QSharedPointer<ExceptionModel> m_exceptionModel;
     QTableView *m_mainTableView{};
     Ui::MainWindow *m_ui;
+
+    quint32 rvaToFileOffset(const LIEF::PE::Binary &binary, quint32 rva);
 };
 
 #endif // EXCEPTIONCONTROLLER_H

@@ -12,7 +12,7 @@ public:
     ExceptionModel(QObject *parent = nullptr);
 
     enum class ExceptionColumn {
-        FileOffset,
+        //FileOffset,
         BeginRVA,
         EndRVA,
         UnwindRVA,

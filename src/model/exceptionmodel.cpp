@@ -27,8 +27,8 @@ QVariant ExceptionModel::data(const QModelIndex &index, int role) const
     auto column = static_cast<ExceptionColumn>(index.column());
 
     switch (column) {
-    case ExceptionColumn::FileOffset:
-        return QString("0x%1").arg(ei.fileOffset, 8, 16, QChar('0'));
+    // case ExceptionColumn::FileOffset:
+    //     return QString("0x%1").arg(ei.fileOffset, 8, 16, QChar('0'));
     case ExceptionColumn::BeginRVA:
         return QString("0x%1").arg(ei.beginRVA, 8, 16, QChar('0'));
     case ExceptionColumn::EndRVA:
@@ -81,8 +81,8 @@ QVariant ExceptionModel::headerData(int section, Qt::Orientation orientation, in
     auto column = static_cast<ExceptionColumn>(section);
 
     switch (column) {
-    case ExceptionColumn::FileOffset:
-        return "File Offset";
+    // case ExceptionColumn::FileOffset:
+    //     return "File Offset";
     case ExceptionColumn::BeginRVA:
         return "Begin RVA";
     case ExceptionColumn::EndRVA:

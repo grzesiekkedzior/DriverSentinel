@@ -141,7 +141,7 @@ void ExceptionController::loadExceptionInfo(const QModelIndex &index)
                             exInfo.epilogSize = epilog->size();
                         } else {
                             auto uop = mapOpcode(opcode.get());
-                            qDebug() << unwindOpToString(uop);
+                            //qDebug() << unwindOpToString(uop);
                             exInfo.unwindOps.append(uop);
                         }
                     }
@@ -172,6 +172,19 @@ void ExceptionController::clear()
     if (!m_exceptionModel)
         return;
     m_exceptionModel->loadExceptionDataToView({});
+}
+
+quint32 ExceptionController::rvaToFileOffset(const LIEF::PE::Binary &binary, quint32 rva)
+{
+    auto sect = binary.section_from_rva(rva);
+    if (sect) {
+        qDebug() << "RVA:" << QString::number(rva, 16)
+                 << "-> Section:" << QString::fromStdString(sect->name())
+                 << "VA:" << QString::number(sect->virtual_address(), 16)
+                 << "Raw:" << QString::number(sect->pointerto_raw_data(), 16);
+        return rva - sect->virtual_address() + sect->pointerto_raw_data();
+    }
+    return 0;
 }
 
 QSharedPointer<ExceptionModel> ExceptionController::exceptionModel() const

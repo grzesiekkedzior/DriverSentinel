@@ -5,7 +5,7 @@
 
 struct ExceptionInfo
 {
-    quint32 fileOffset = 0;
+    //quint32 fileOffset = 0;
     quint32 beginRVA = 0;
     quint32 endRVA = 0;
     quint32 unwindRVA = 0;

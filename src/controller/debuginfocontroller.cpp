@@ -1,6 +1,8 @@
 #include "controller/debuginfocontroller.h"
 #include <QDialog>
+#include <QFutureWatcher>
 #include <QPlainTextEdit>
+#include <QtConcurrent>
 #include "ui_mainwindow.h"
 #include <LIEF/PE.hpp>
 #include <utils/peutils.h>
@@ -22,7 +24,6 @@ void DebugInfoController::loadDebugInfo(const QModelIndex &index)
 {
     if (!index.isValid())
         return;
-    QVector<DebugInfo> l_debugInfo;
 
     QString filePath = PEUtils::getPEfilePath(m_ui->mainTable, index);
     if (filePath.isEmpty()) {
@@ -30,36 +31,48 @@ void DebugInfoController::loadDebugInfo(const QModelIndex &index)
         return;
     }
 
-    try {
-        std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(filePath.toStdString());
+    auto *watcher = new QFutureWatcher<QVector<DebugInfo>>(this);
 
-        for (const auto &dbg : binary->debug()) {
-            DebugInfo di;
-            di.type = QString::fromStdString(LIEF::PE::to_string(dbg.type()));
-            di.characteristics = dbg.characteristics();
-            di.timestamp = dbg.timestamp();
-            di.majorVersion = dbg.major_version();
-            di.minorVersion = dbg.minor_version();
-            di.sizeOfData = dbg.sizeof_data();
-            di.addressOfRawData = dbg.addressof_rawdata();
-            di.pointerToRawData = dbg.pointerto_rawdata();
+    connect(watcher, &QFutureWatcher<QVector<DebugInfo>>::finished, this, [this, watcher]() {
+        QVector<DebugInfo> result = watcher->result();
+        updateModel(result);
+        watcher->deleteLater();
+    });
 
-            auto payloadSpan = dbg.payload();
-            di.payload = QByteArray(reinterpret_cast<const char *>(payloadSpan.data()),
-                                    static_cast<int>(payloadSpan.size()));
+    QFuture<QVector<DebugInfo>> future = QtConcurrent::run([filePath]() -> QVector<DebugInfo> {
+        QVector<DebugInfo> l_debugInfo;
 
-            l_debugInfo.append(di);
+        try {
+            std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(
+                filePath.toStdString());
+
+            for (const auto &dbg : binary->debug()) {
+                DebugInfo di;
+                di.type = QString::fromStdString(LIEF::PE::to_string(dbg.type()));
+                di.characteristics = dbg.characteristics();
+                di.timestamp = dbg.timestamp();
+                di.majorVersion = dbg.major_version();
+                di.minorVersion = dbg.minor_version();
+                di.sizeOfData = dbg.sizeof_data();
+                di.addressOfRawData = dbg.addressof_rawdata();
+                di.pointerToRawData = dbg.pointerto_rawdata();
+
+                auto payloadSpan = dbg.payload();
+                di.payload = QByteArray(reinterpret_cast<const char *>(payloadSpan.data()),
+                                        static_cast<int>(payloadSpan.size()));
+
+                l_debugInfo.append(di);
+            }
+        } catch (const std::exception &e) {
+            qWarning() << "LIEF error:" << e.what();
+        } catch (...) {
+            qWarning() << "Unknown error while parsing PE";
         }
 
-        updateModel(l_debugInfo);
+        return l_debugInfo;
+    });
 
-    } catch (const std::exception &e) {
-        qWarning() << "LIEF error:" << e.what();
-    } catch (...) {
-        qWarning() << "Unknown error while parsing PE";
-    }
-
-    updateModel(l_debugInfo);
+    watcher->setFuture(future);
 }
 
 void DebugInfoController::updateModel(const QVector<DebugInfo> &di)

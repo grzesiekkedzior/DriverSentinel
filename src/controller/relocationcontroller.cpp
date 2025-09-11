@@ -1,6 +1,8 @@
 #include "controller/relocationcontroller.h"
 #include "ui_mainwindow.h"
 
+#include <QFutureWatcher>
+#include <QtConcurrent>
 #include "utils/peutils.h"
 #include <LIEF/PE/Binary.hpp>
 #include <LIEF/PE/Parser.hpp>
@@ -34,72 +36,87 @@ void RelocationController::loadRelocationDataToView(const QModelIndex &index)
     QString filePath = PEUtils::getPEfilePath(m_ui->mainTable, index);
     if (filePath.isEmpty()) {
         qWarning() << "File path is empty";
+        clear();
         return;
     }
 
-    QVector<LIEF_RELOCATION::RelocationBlockInfo> l_relocationBlockInfo;
+    auto watcher = new QFutureWatcher<QVector<LIEF_RELOCATION::RelocationBlockInfo>>(this);
 
-    try {
-        std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(filePath.toStdString());
+    connect(watcher,
+            &QFutureWatcher<QVector<LIEF_RELOCATION::RelocationBlockInfo>>::finished,
+            this,
+            [this, watcher]() {
+                QVector<LIEF_RELOCATION::RelocationBlockInfo> blocks = watcher->result();
+                m_relocationBlockInfo = blocks;
 
-        if (!binary->has_relocations()) {
-            qWarning() << "No relocations found in binary";
-            clear();
-            return;
-        }
-
-        for (auto &reloc : binary->relocations()) {
-            LIEF_RELOCATION::RelocationBlockInfo blockInfo;
-            blockInfo.pageRVA = reloc.virtual_address();
-            blockInfo.blockSize = reloc.block_size();
-            blockInfo.entriesCount = reloc.entries().size();
-
-            LIEF_RELOCATION::RelocationEntryInfo entryInfo;
-            for (auto &entry : reloc.entries()) {
-                entryInfo.offsetInPage = entry.position();
-                switch (entry.type()) {
-                case LIEF::PE::RelocationEntry::BASE_TYPES::ABS:
-                    entryInfo.type = "ABS";
-                    break;
-                case LIEF::PE::RelocationEntry::BASE_TYPES::HIGH:
-                    entryInfo.type = "HIGH";
-                    break;
-                case LIEF::PE::RelocationEntry::BASE_TYPES::LOW:
-                    entryInfo.type = "LOW";
-                    break;
-                case LIEF::PE::RelocationEntry::BASE_TYPES::HIGHLOW:
-                    entryInfo.type = "HIGHLOW";
-                    break;
-                case LIEF::PE::RelocationEntry::BASE_TYPES::HIGHADJ:
-                    entryInfo.type = "HIGHADJ";
-                    break;
-                case LIEF::PE::RelocationEntry::BASE_TYPES::DIR64:
-                    entryInfo.type = "DIR64";
-                    break;
-                default:
-                    entryInfo.type = "UNKNOWN";
-                    break;
+                if (blocks.isEmpty()) {
+                    clear();
+                } else {
+                    update(blocks);
                 }
 
-                entryInfo.relocRVA = reloc.virtual_address() + entryInfo.offsetInPage;
-                entryInfo.value = entry.data();
-                blockInfo.entries.append(entryInfo);
+                watcher->deleteLater();
+            });
+
+    watcher->setFuture(
+        QtConcurrent::run([filePath]() -> QVector<LIEF_RELOCATION::RelocationBlockInfo> {
+            QVector<LIEF_RELOCATION::RelocationBlockInfo> blocks;
+
+            try {
+                std::unique_ptr<LIEF::PE::Binary> binary(LIEF::PE::Parser::parse(
+                    filePath.toStdString())); // = LIEF::PE::Parser::parse(filePath.toStdString());
+                if (!binary->has_relocations())
+                    return blocks;
+
+                for (auto &reloc : binary->relocations()) {
+                    LIEF_RELOCATION::RelocationBlockInfo blockInfo;
+                    blockInfo.pageRVA = reloc.virtual_address();
+                    blockInfo.blockSize = reloc.block_size();
+                    blockInfo.entriesCount = reloc.entries().size();
+
+                    for (auto &entry : reloc.entries()) {
+                        LIEF_RELOCATION::RelocationEntryInfo e;
+                        e.offsetInPage = entry.position();
+
+                        switch (entry.type()) {
+                        case LIEF::PE::RelocationEntry::BASE_TYPES::ABS:
+                            e.type = "ABS";
+                            break;
+                        case LIEF::PE::RelocationEntry::BASE_TYPES::HIGH:
+                            e.type = "HIGH";
+                            break;
+                        case LIEF::PE::RelocationEntry::BASE_TYPES::LOW:
+                            e.type = "LOW";
+                            break;
+                        case LIEF::PE::RelocationEntry::BASE_TYPES::HIGHLOW:
+                            e.type = "HIGHLOW";
+                            break;
+                        case LIEF::PE::RelocationEntry::BASE_TYPES::HIGHADJ:
+                            e.type = "HIGHADJ";
+                            break;
+                        case LIEF::PE::RelocationEntry::BASE_TYPES::DIR64:
+                            e.type = "DIR64";
+                            break;
+                        default:
+                            e.type = "UNKNOWN";
+                            break;
+                        }
+
+                        e.relocRVA = reloc.virtual_address() + e.offsetInPage;
+                        e.value = entry.data();
+                        blockInfo.entries.append(e);
+                    }
+
+                    blocks.push_back(blockInfo);
+                }
+            } catch (const std::exception &e) {
+                qWarning() << "Exception parsing PE:" << e.what();
+            } catch (...) {
+                qWarning() << "Unknown exception parsing PE";
             }
 
-            l_relocationBlockInfo.push_back(blockInfo);
-        }
-        m_relocationBlockInfo = l_relocationBlockInfo;
-        update(l_relocationBlockInfo);
-
-    } catch (const std::exception &e) {
-        qWarning() << "LIEF error:" << e.what();
-        return;
-    } catch (...) {
-        qWarning() << "Unknown error while parsing PE";
-        return;
-    }
-
-    update(l_relocationBlockInfo);
+            return blocks;
+        }));
 }
 
 void RelocationController::clear()

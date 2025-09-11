@@ -24,10 +24,11 @@ public:
 public slots:
     void loadRelocationDataToView(const QModelIndex &index);
     void clear();
-    void update(const QVector<LIEF_RELOCATION::RelocationInfo> &ri);
+    void update(const QVector<LIEF_RELOCATION::RelocationBlockInfo> &ri);
+    void onBlockRelocationClicked(const QModelIndex &index);
 
 private:
-    QSharedPointer<LIEF_RELOCATION::RelocationInfo> m_relocationInfo;
+    QVector<LIEF_RELOCATION::RelocationBlockInfo> m_relocationBlockInfo;
     QSharedPointer<RelocationBlocksModel> m_relocationBlocksModel;
     QSharedPointer<RelocationEntriesModel> m_relocationEntriesModel;
     QTableView *m_mainTableView{};

@@ -1694,8 +1694,19 @@
            <property name="orientation">
             <enum>Qt::Orientation::Horizontal</enum>
            </property>
-           <widget class="QTableView" name="blockRelocationTableView"/>
-           <widget class="QTableView" name="entryRelocationTableView"/>
+           <widget class="QTableView" name="blockRelocationTableView">
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+            </property>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+           </widget>
+           <widget class="QTableView" name="entryRelocationTableView">
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+           </widget>
           </widget>
          </item>
         </layout>

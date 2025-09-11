@@ -28,9 +28,9 @@ QVariant RelocationBlocksModel::data(const QModelIndex &index, int role) const
 
     switch (static_cast<Column>(index.column())) {
     case Column::PageRVA:
-        return QString("0x%1").arg(block.pageRVA, 0, 16).toUpper();
+        return QString("0x%1").arg(block.pageRVA, 0, 16).toUpper().replace('X', 'x');
     case Column::BlockSize:
-        return QString("0x%1").arg(block.blockSize, 0, 16).toUpper();
+        return QString("0x%1").arg(block.blockSize, 0, 16).toUpper().replace('X', 'x');
     case Column::EntriesCount:
         return static_cast<qulonglong>(block.entriesCount);
     case Column::COLUMN_COUNT:

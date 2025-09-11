@@ -30,13 +30,13 @@ QVariant RelocationEntriesModel::data(const QModelIndex &index, int role) const
 
     switch (static_cast<Column>(index.column())) {
     case Column::OffsetInPage:
-        return QString("0x%1").arg(entry.offsetInPage, 0, 16).toUpper();
+        return QString("0x%1").arg(entry.offsetInPage, 0, 16).toUpper().replace('X', 'x');
     case Column::RelocRVA:
-        return QString("0x%1").arg(entry.relocRVA, 0, 16).toUpper();
+        return QString("0x%1").arg(entry.relocRVA, 0, 16).toUpper().replace('X', 'x');
     case Column::Type:
         return entry.type;
     case Column::Value:
-        return QString("0x%1").arg(entry.value, 0, 16).toUpper();
+        return QString("0x%1").arg(entry.value, 0, 16).toUpper().replace('X', 'x');
     default:
         return {};
     }

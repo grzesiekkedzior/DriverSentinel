@@ -121,6 +121,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/controller/relocationcontroller.cpp
         include/model/relocationentriesmodel.h
         src/model/relocationentriesmodel.cpp
+        include/data/resourcedata.h
+        include/model/resourcemodel.h
+        src/model/resourcemodel.cpp
+        include/controller/resourcecontroller.h
+        src/controller/resourcecontroller.cpp
 
 
 

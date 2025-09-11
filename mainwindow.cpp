@@ -11,6 +11,7 @@
 #include "controller/generalcontroller.h"
 #include "controller/optionalheadercontroller.h"
 #include "controller/relocationcontroller.h"
+#include "controller/resourcecontroller.h"
 #include "controller/richhdrcontroller.h"
 #include "controller/sectioninfocontroller.h"
 #include "controller/stringinfocontroller.h"
@@ -165,4 +166,8 @@ void MainWindow::start()
     ui->blockRelocationTableView->setModel(rlc->relocationBlocksModel().get());
     ui->entryRelocationTableView->setModel(rlc->relocationEntriesModel().get());
     connect(dt, &DriverToolbar::clearRequested, rlc, &RelocationController::clear);
+
+    TreeResourcesController *rtc = new TreeResourcesController{ui->mainTable, this->ui};
+    ui->resourcesTreeView->setModel(rtc->resourceTreeModel().get());
+    connect(dt, &DriverToolbar::clearRequested, rtc, &TreeResourcesController::clear);
 }

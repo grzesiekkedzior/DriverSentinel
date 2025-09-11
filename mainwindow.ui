@@ -39,7 +39,7 @@
       </widget>
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>11</number>
+        <number>12</number>
        </property>
        <widget class="QWidget" name="general">
         <attribute name="title">
@@ -485,8 +485,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>1064</width>
-              <height>432</height>
+              <width>1058</width>
+              <height>530</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -926,8 +926,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>1064</width>
-              <height>674</height>
+              <width>1058</width>
+              <height>827</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1711,6 +1711,16 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="resources">
+        <attribute name="title">
+         <string>Resources</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_16">
+         <item>
+          <widget class="QTreeView" name="resourcesTreeView"/>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -1722,7 +1732,7 @@
      <x>0</x>
      <y>0</y>
      <width>1125</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

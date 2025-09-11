@@ -113,6 +113,14 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         include/controller/exceptioncontroller.h
         src/controller/exceptioncontroller.cpp
         include/data/relocationinfo.h
+        include/model/relocationblocksmodel.h
+        src/model/relocationblocksmodel.cpp
+
+
+        include/controller/relocationcontroller.h
+        src/controller/relocationcontroller.cpp
+        include/model/relocationentriesmodel.h
+        src/model/relocationentriesmodel.cpp
 
 
 

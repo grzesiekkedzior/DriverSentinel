@@ -485,8 +485,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>1058</width>
-              <height>530</height>
+              <width>1064</width>
+              <height>432</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_9">
@@ -926,8 +926,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>1058</width>
-              <height>827</height>
+              <width>1064</width>
+              <height>674</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1694,8 +1694,8 @@
            <property name="orientation">
             <enum>Qt::Orientation::Horizontal</enum>
            </property>
-           <widget class="QTableView" name="entryRelocationTableView"/>
            <widget class="QTableView" name="blockRelocationTableView"/>
+           <widget class="QTableView" name="entryRelocationTableView"/>
           </widget>
          </item>
         </layout>
@@ -1711,7 +1711,7 @@
      <x>0</x>
      <y>0</y>
      <width>1125</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

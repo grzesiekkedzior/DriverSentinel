@@ -10,6 +10,7 @@
 #include "controller/functioninfocontroller.h"
 #include "controller/generalcontroller.h"
 #include "controller/optionalheadercontroller.h"
+#include "controller/relocationcontroller.h"
 #include "controller/richhdrcontroller.h"
 #include "controller/sectioninfocontroller.h"
 #include "controller/stringinfocontroller.h"
@@ -159,4 +160,9 @@ void MainWindow::start()
     ExceptionController *exc = new ExceptionController{ui->mainTable, this->ui};
     ui->exceptionTableView->setModel(exc->exceptionModel().get());
     connect(dt, &DriverToolbar::clearRequested, exc, &ExceptionController::clear);
+
+    RelocationController *rlc = new RelocationController{ui->mainTable, this->ui};
+    ui->blockRelocationTableView->setModel(rlc->relocationBlocksModel().get());
+    ui->entryRelocationTableView->setModel(rlc->relocationEntriesModel().get());
+    connect(dt, &DriverToolbar::clearRequested, rlc, &RelocationController::clear);
 }

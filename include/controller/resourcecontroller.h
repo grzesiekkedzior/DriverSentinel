@@ -30,6 +30,8 @@ private:
     QSharedPointer<ResourceTreeModel> m_resourceTreeModel;
     QTableView *m_mainTableView{};
     Ui::MainWindow *m_ui;
+
+    QString langIdToString(uint16_t langId);
 };
 
 #endif // RESOURCECONTROLLER_H

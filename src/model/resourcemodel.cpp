@@ -114,13 +114,13 @@ QVariant ResourceTreeModel::headerData(int section, Qt::Orientation orientation,
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch (section) {
         case 0:
-            return "Typ";
+            return "Type";
         case 1:
-            return "ID/Nazwa";
+            return "ID/Name";
         case 2:
             return "Lang";
         case 3:
-            return "Rozmiar";
+            return "Size";
         }
     }
     return {};

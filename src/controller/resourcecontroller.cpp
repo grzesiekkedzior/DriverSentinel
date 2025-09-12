@@ -19,12 +19,19 @@ TreeResourcesController::TreeResourcesController(QTableView *mainTableView,
     , m_resourceTreeModel{QSharedPointer<ResourceTreeModel>::create()}
 
 {
+    m_ui->resourcesTreeView->setModel(m_resourceTreeModel.data());
     connect(m_mainTableView,
             &QTableView::clicked,
             this,
             &TreeResourcesController::loadResourcesToView);
+    connect(m_ui->resourcesTreeView,
+            &QTreeView::clicked,
+            this,
+            &TreeResourcesController::onResourceClicked);
+    m_ui->hexViewer->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 }
 
+// The two horrible functions within this project
 void TreeResourcesController::loadResourcesToView(const QModelIndex &index)
 {
     if (!index.isValid())
@@ -103,7 +110,8 @@ void TreeResourcesController::loadResourcesToView(const QModelIndex &index)
                     QString size = QString("Size: %1 bytes").arg(data->content().size());
 
                     ResourceTreeEntry dataEntry{"DATA", langStr, langIdToString(resId), size};
-
+                    auto spanContent = data->content();
+                    dataEntry.rawContent.assign(spanContent.begin(), spanContent.end());
                     TreeNode *dataNode = new TreeNode(dataEntry, parentNode);
                     parentNode->appendChild(dataNode);
                 }
@@ -143,6 +151,7 @@ void TreeResourcesController::clear()
 {
     if (m_resourceTreeModel) {
         m_resourceTreeModel->clear();
+        m_ui->hexViewer->clear();
     }
 }
 
@@ -211,6 +220,40 @@ QString TreeResourcesController::langIdToString(uint16_t langId)
         return "Neutral";
     default:
         return QString("Unknown (0x%1)").arg(langId, 4, 16, QChar('0'));
+    }
+}
+
+void TreeResourcesController::onResourceClicked(const QModelIndex &index)
+{
+    if (!index.isValid())
+        return;
+
+    auto *node = static_cast<TreeNode *>(index.internalPointer());
+    if (!node)
+        return;
+
+    const ResourceTreeEntry &entry = node->entry();
+
+    if (!entry.rawContent.empty()) {
+        QString hexStr;
+        hexStr.reserve(entry.rawContent.size() * 3);
+
+        for (size_t i = 0; i < entry.rawContent.size(); ++i) {
+            hexStr += QString("%1 ").arg(static_cast<unsigned char>(entry.rawContent[i]),
+                                         2,
+                                         16,
+                                         QChar('0'));
+            if ((i + 1) % 16 == 0)
+                hexStr += "\n";
+        }
+
+        m_ui->hexViewer->setPlainText(hexStr);
+        QFont monoFont("Courier New");
+        monoFont.setStyleHint(QFont::Monospace);
+        monoFont.setPointSize(12);
+        m_ui->hexViewer->setFont(monoFont);
+    } else {
+        m_ui->hexViewer->clear();
     }
 }
 

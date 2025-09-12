@@ -24,6 +24,7 @@ public:
 public slots:
     void loadResourcesToView(const QModelIndex &index);
     void clear();
+    void onResourceClicked(const QModelIndex &index);
 
 private:
     QSharedPointer<ResourceTreeEntry> m_resourceEntry;

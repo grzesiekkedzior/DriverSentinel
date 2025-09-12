@@ -1717,7 +1717,13 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_16">
          <item>
-          <widget class="QTreeView" name="resourcesTreeView"/>
+          <widget class="QSplitter" name="splitter_4">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <widget class="QTreeView" name="resourcesTreeView"/>
+           <widget class="QPlainTextEdit" name="hexViewer"/>
+          </widget>
          </item>
         </layout>
        </widget>

@@ -7,6 +7,7 @@
 #include "controller/dosheadercontroller.h"
 #include "controller/drivercontroller.h"
 #include "controller/exceptioncontroller.h"
+#include "controller/fileinfocontroller.h"
 #include "controller/functioninfocontroller.h"
 #include "controller/generalcontroller.h"
 #include "controller/optionalheadercontroller.h"
@@ -170,4 +171,8 @@ void MainWindow::start()
     TreeResourcesController *rtc = new TreeResourcesController{ui->mainTable, this->ui};
     ui->resourcesTreeView->setModel(rtc->resourceTreeModel().get());
     connect(dt, &DriverToolbar::clearRequested, rtc, &TreeResourcesController::clear);
+
+    FileInfoController *fic = new FileInfoController{ui->mainTable, this->ui};
+    ui->fileHeaderTableView->setModel(fic->fileModel().get());
+    connect(dt, &DriverToolbar::clearRequested, fic, &FileInfoController::clear);
 }

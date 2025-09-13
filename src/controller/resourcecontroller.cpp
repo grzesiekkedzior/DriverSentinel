@@ -38,6 +38,10 @@ void TreeResourcesController::loadResourcesToView(const QModelIndex &index)
         return;
 
     QString filePath = PEUtils::getPEfilePath(m_ui->mainTable, index);
+    if (filePath.isEmpty()) {
+        qWarning() << "File path is empty";
+        return;
+    }
 
     try {
         std::unique_ptr<LIEF::PE::Binary> binary = LIEF::PE::Parser::parse(filePath.toStdString());

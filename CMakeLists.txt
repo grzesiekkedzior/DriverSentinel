@@ -126,6 +126,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/model/resourcemodel.cpp
         include/controller/resourcecontroller.h
         src/controller/resourcecontroller.cpp
+        include/data/fileheader.h
+        include/model/filemodel.h
+        src/model/filemodel.cpp
+        include/controller/fileinfocontroller.h
+        src/controller/fileinfocontroller.cpp
 
 
 

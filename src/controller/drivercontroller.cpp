@@ -38,11 +38,13 @@ void DriverController::start()
     }
 
     m_driverModel->setDrivers(df);
+    m_ui->stackedWidget->setCurrentIndex(0);
 }
 
 void DriverController::refresh()
 {
     emit m_driverToolbar->clearRequested();
+    m_ui->stackedWidget->setCurrentIndex(0);
     start();
 }
 
@@ -51,6 +53,7 @@ void DriverController::clear()
     if (m_driverModel) {
         m_driverModel->setDrivers({});
         m_selectedPEFile = "";
+        m_ui->stackedWidget->setCurrentIndex(1);
     }
 }
 

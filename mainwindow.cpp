@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include <QObject>
+#include <QTimer>
 #include "./ui_mainwindow.h"
 #include "controller/certificatecontroller.h"
 #include "controller/debuginfocontroller.h"
@@ -31,10 +32,12 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->comboSort->hide();
+
+    // Start od welcome
+
     welcome();
     start();
-    ui->mainTable->hide();
-    ui->tabWidget->hide();
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
 MainWindow::~MainWindow()
@@ -47,6 +50,7 @@ void MainWindow::start()
     DriverController *dc = new DriverController(QSharedPointer<DriverModel>::create(), this->ui);
 
     DriverToolbar *dt = new DriverToolbar;
+    statusBarAnimation(dt);
     this->addToolBar(dt);
     dc->setDriverToolbar(dt);
 
@@ -70,6 +74,9 @@ void MainWindow::start()
     connect(dt, &DriverToolbar::refreshRequested, dc, &DriverController::refresh);
     connect(dt, &DriverToolbar::clearRequested, dc, &DriverController::clear);
     connect(dt, &DriverToolbar::openPERequested, dc, &DriverController::openPEFile);
+    connect(dt, &DriverToolbar::refreshRequested, this, &MainWindow::clearText);
+    connect(dt, &DriverToolbar::openPERequested, this, &MainWindow::clearText);
+    connect(dt, &DriverToolbar::clearRequested, this, &MainWindow::startTimer);
     connect(ui->mainTable,
             &QTableView::clicked,
             sc,
@@ -226,4 +233,52 @@ void MainWindow::welcome()
     ui->linkToRepo->setTextInteractionFlags(Qt::TextBrowserInteraction);
     ui->linkToRepo->setOpenExternalLinks(true);
     ui->linkToRepo->setFocusPolicy(Qt::NoFocus);
+}
+
+void MainWindow::statusBarAnimation(DriverToolbar *dt)
+{
+    byteLabel = new QLabel(this);
+    spinnerLabel = new QLabel(this);
+
+    ui->statusbar->addPermanentWidget(byteLabel);
+    ui->statusbar->addPermanentWidget(spinnerLabel);
+
+    QString byteStream = "4D 5A 90 00 03 00 00 00 04 00 00 00 FF FF 00 00 B8 00 00 00";
+    QStringList spinner = {"|", "/", "-", "\\"};
+
+    statusTimer = new QTimer(this);
+
+    connect(statusTimer, &QTimer::timeout, this, [this, byteStream, spinner]() mutable {
+        static int byteOffset = 0;
+        static int spinnerIdx = 0;
+
+        int len = 60;
+        QString part = byteStream.mid(byteOffset, len);
+        byteOffset = (byteOffset + 1) % byteStream.size();
+        byteLabel->setText(part);
+
+        spinnerLabel->setText(spinner.at(spinnerIdx));
+        spinnerIdx = (spinnerIdx + 1) % spinner.size();
+    });
+
+    statusTimer->start(200);
+    byteLabel->show();
+    spinnerLabel->show();
+}
+
+void MainWindow::clearText()
+{
+    if (statusTimer->isActive())
+        statusTimer->stop();
+    byteLabel->clear();
+    spinnerLabel->clear();
+    byteLabel->hide();
+    spinnerLabel->hide();
+}
+
+void MainWindow::startTimer()
+{
+    byteLabel->show();
+    spinnerLabel->show();
+    statusTimer->start();
 }

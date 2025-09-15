@@ -1,7 +1,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QLabel>
 #include <QMainWindow>
+#include "toolbar/drivertoolbar.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,7 +21,13 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QLabel *byteLabel;
+    QLabel *spinnerLabel;
+    QTimer *statusTimer;
     void start();
     void welcome();
+    void statusBarAnimation(DriverToolbar *dt);
+    void clearText();
+    void startTimer();
 };
 #endif // MAINWINDOW_H

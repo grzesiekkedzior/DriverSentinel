@@ -20,5 +20,6 @@ public:
 private:
     Ui::MainWindow *ui;
     void start();
+    void welcome();
 };
 #endif // MAINWINDOW_H

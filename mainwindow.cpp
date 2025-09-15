@@ -31,7 +31,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->comboSort->hide();
+    welcome();
     start();
+    ui->mainTable->hide();
+    ui->tabWidget->hide();
 }
 
 MainWindow::~MainWindow()
@@ -175,4 +178,52 @@ void MainWindow::start()
     FileInfoController *fic = new FileInfoController{ui->mainTable, this->ui};
     ui->fileHeaderTableView->setModel(fic->fileModel().get());
     connect(dt, &DriverToolbar::clearRequested, fic, &FileInfoController::clear);
+}
+
+void MainWindow::welcome()
+{
+    QString asciiArt = R"(
+
+
+
+
+██████╗ ██████╗ ██╗██╗   ██╗███████╗██████╗     ███████╗███████╗███╗   ██╗████████╗██╗███╗   ██╗███████╗██╗     
+██╔══██╗██╔══██╗██║██║   ██║██╔════╝██╔══██╗    ██╔════╝██╔════╝████╗  ██║╚══██╔══╝██║████╗  ██║██╔════╝██║     
+██║  ██║██████╔╝██║██║   ██║█████╗  ██████╔╝    ███████╗█████╗  ██╔██╗ ██║   ██║   ██║██╔██╗ ██║█████╗  ██║     
+██║  ██║██╔══██╗██║╚██╗ ██╔╝██╔══╝  ██╔══██╗    ╚════██║██╔══╝  ██║╚██╗██║   ██║   ██║██║╚██╗██║██╔══╝  ██║     
+██████╔╝██║  ██║██║ ╚████╔╝ ███████╗██║  ██║    ███████║███████╗██║ ╚████║   ██║   ██║██║ ╚████║███████╗███████╗
+╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝    ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝
+                                                                                                                
+╔═════════════════════════════════════╗
+║          PORTABLE EXECUTABLE        ║
+║      Reverse engineering studio     ║
+║                                     ║
+║         ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄        ║
+║         █  4D 5A 50 45 00  █        ║
+║         █  00 00 00 00 00  █        ║
+║         ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀        ║
+║                                     ║
+║     Tools for dissecting PE files   ║
+║        and inspecting headers       ║
+║                                     ║
+╚═════════════════════════════════════╝
+                                                         
+)";
+
+    QString info = "\nVersion: 1.0.0"
+                   "\nAuthor: Grzegorz Kędzior";
+
+    ui->welcomeLabel->setText(asciiArt + info);
+    ui->welcomeLabel->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+    ui->welcomeLabel->setAlignment(Qt::AlignCenter);
+    ui->welcomeLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+
+    ui->linkToRepo->setText(
+        "<a href=\"https://github.com/grzesiekkedzior/DriverSentinel\">DriverSentinel — "
+        "GitHub</a>");
+    ui->linkToRepo->setAlignment(Qt::AlignCenter);
+    ui->linkToRepo->setTextFormat(Qt::RichText);
+    ui->linkToRepo->setTextInteractionFlags(Qt::TextBrowserInteraction);
+    ui->linkToRepo->setOpenExternalLinks(true);
+    ui->linkToRepo->setFocusPolicy(Qt::NoFocus);
 }

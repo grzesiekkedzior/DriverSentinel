@@ -24,6 +24,12 @@ else()
     set(CMAKE_PREFIX_PATH "C:/Program Files (x86)/LIEF-release/lib/cmake")
 endif()
 
+#if(CMAKE_BUILD_TYPE MATCHES Debug)
+#    set(CMAKE_PREFIX_PATH "C:/Program Files (x86)/LIEF/lib/cmake")
+#else()
+#    # Dokładny katalog, w którym znajduje się LIEFConfig.cmake
+#    set(LIEF_DIR "C:/Program Files (x86)/LIEF-release/lib/cmake/LIEF")
+#endif()
 
 find_package(LIEF REQUIRED COMPONENTS STATIC)
 

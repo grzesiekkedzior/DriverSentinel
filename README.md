@@ -62,7 +62,7 @@ The project is developed in **C++**, using the **Qt** framework for the graphica
 > Use it at your own risk and do not rely on it for production or critical security analysis.   
 
 ### 💰 Donate via PayPal  
-You can support TuneScape by sending a donation through PayPal:  
+You can support Project by sending a donation through PayPal:  
 [![Donate via PayPal](https://img.shields.io/badge/Donate%20via%20PayPal-00457C?logo=paypal&logoColor=white&style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=MW4VMJ8YHSZF2)
 
 Or simply scan the QR code below:  

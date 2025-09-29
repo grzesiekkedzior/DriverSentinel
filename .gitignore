@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # This file is used to ignore files which are generated
 # ----------------------------------------------------------------------------
 
@@ -80,3 +81,12 @@ CMakeLists.txt.user*
 .rcc/
 .uic/
 /build*/
+=======
+# Ignore everything by default
+*
+
+# Except this files/folders:
+!.gitignore
+!docs/
+!docs/**
+>>>>>>> b6c47f445f13d4a17079034b041d59ca09a9cb69

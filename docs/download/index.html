@@ -44,41 +44,44 @@
 
 
   
+
+
+
   
-
-
+  
+  
 
 
 
 
 <!-- Open Graph image and Twitter Card metadata -->
 
-<title itemprop="name">Driver Sentinel Home</title>
-<meta property="og:title" content=Driver&#32;Sentinel&#32;Home />
-<meta name="twitter:title" content=Driver&#32;Sentinel&#32;Home />
-<meta itemprop="name" content=Driver&#32;Sentinel&#32;Home />
-<meta name="application-name" content=Driver&#32;Sentinel&#32;Home />
+<title itemprop="name">Driver Sentinel Home - Download</title>
+<meta property="og:title" content=Driver&#32;Sentinel&#32;Home&#32;-&#32;Download />
+<meta name="twitter:title" content=Driver&#32;Sentinel&#32;Home&#32;-&#32;Download />
+<meta itemprop="name" content=Driver&#32;Sentinel&#32;Home&#32;-&#32;Download />
+<meta name="application-name" content=Driver&#32;Sentinel&#32;Home&#32;-&#32;Download />
 <meta property="og:site_name" content="" />
 
 
-<meta name="description" content="Reverse PE files" />
-<meta itemprop="description" content="Reverse PE files" />
-<meta property="og:description" content="Reverse PE files" />
-<meta name="twitter:description" content="Reverse PE files" />
+<meta name="description" content="" />
+<meta itemprop="description" content="" />
+<meta property="og:description" content="" />
+<meta name="twitter:description" content="" />
 
 
-<base href="/" />
-<link rel="canonical" href="/" itemprop="url" />
-<meta name="url" content="/" />
-<meta name="twitter:url" content="/" />
-<meta property="og:url" content="/" />
+<base href="/download/" />
+<link rel="canonical" href="/download/" itemprop="url" />
+<meta name="url" content="/download/" />
+<meta name="twitter:url" content="/download/" />
+<meta property="og:url" content="/download/" />
 
 
-<meta property="og:updated_time" content="2025-09-29T12:27:24&#43;02:00" />
+<meta property="og:updated_time" content="2025-09-26T23:20:18&#43;02:00" />
 
 
 <link rel="sitemap" type="application/xml" title="Sitemap" href='/sitemap.xml' />
-<link href="/index.xml" rel="alternate" type="application/rss+xml" title="" />
+<link href="/download/index.xml" rel="alternate" type="application/rss+xml" title="" />
 
 <meta name="robots" content="index,follow" />
 <meta name="googlebot" content="index,follow" />
@@ -510,15 +513,15 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
                 <div class="post">
   <div class="info">
   <h1 class="post-title">
-    <a href="/">Home</a>
+    <a href="/download/">Download</a>
   </h1>
 
   <div class="headline">
     <div>
       
       
-      <time datetime=" 2025-09-29T12:27:24&#43;0200" class="post-date">
-        September 29, 2025
+      <time datetime=" 2025-09-26T23:20:18&#43;0200" class="post-date">
+        September 26, 2025
       </time>
       
       <span> - </span>
@@ -527,7 +530,7 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
           
         
 
-        <span>2 mins read</span>
+        <span>1 min read</span>
       </span>
     </div>
 
@@ -540,49 +543,12 @@ powered by <a target="_blank" href="https://gohugo.io">Hugo</a> | themed with <a
   
 </div>
 
-  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-  <div style="flex: 0 0 150px;">
-    <img src="/images/logo.png" alt="Logo" style="width:150px; height:auto;">
-  </div>
-  <div style="flex: 1; text-align: justify;">
-    Tool for analyzing PE files on the Windows platform.  
-    This application is currently in beta and aims to provide insights into executable files, helping users understand their structure and behavior.  
-    Additional features will be added in future updates as the project evolves.  
-    Feedback from early users will be invaluable for improving the application and adding new functionalities.
-</div>
-</div>
-<div style="float: right; width: 250px; margin: 0 0 20px 20px; transition: transform 0.3s;"> <a href="/images/welcome.png"> <img src="/images/welcome.png" alt="Welcome" style="width: 100%; height: auto; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'"> </a> </div>
-<h1 id="features">Features</h1>
-<p>Below are the current features of <strong>Driver Sentinel</strong>, organized by PE analysis sections:</p>
-<hr>
-<h2 id="general-pe-section">General PE Section</h2>
-<p>Displays basic metadata about the driver, such as file path, size, creation/modification timestamps, and version information. Provides a quick overview of the file.</p>
-<h2 id="certificate">Certificate</h2>
-<p>Shows information about the driver&rsquo;s digital signature, including signer, issuer, and validity period. Helps verify authenticity and integrity of the driver.</p>
-<h2 id="imports">Imports</h2>
-<p>Lists all imported functions and DLL dependencies, helping to trace external API calls and understand functionality.<br>
-Additionally, it provides detailed information about the specific functions used by the PE, allowing deeper analysis of its behavior and capabilities.</p>
-<h2 id="strings">Strings</h2>
-<p>Extracts and displays ASCII and Unicode strings embedded in the driver. Useful for identifying paths, messages, or indicators of suspicious behavior.</p>
-<h2 id="dos-header">DOS Header</h2>
-<p>Displays the MS-DOS header at the beginning of the file, which contains legacy structure information and alignment details.</p>
-<h2 id="optional-header">Optional Header</h2>
-<p>Shows fields from the optional header, including entry point, image base, subsystem type, and memory alignment. Critical for understanding execution context.</p>
-<h2 id="assembly">Assembly</h2>
-<p>Enables low-level inspection of machine code directly from the driver. Allows analysis of instructions and behavior of the binary.</p>
-<h2 id="rich-header">Rich Header</h2>
-<p>Decodes and presents the hidden &ldquo;Rich Header,&rdquo; inserted by the compiler toolchain, revealing information about the build environment.</p>
-<h2 id="debug-info">Debug Info</h2>
-<p>Parses debug-related data directories, which can contain symbol tables and debugging information useful for reverse engineering.</p>
-<h2 id="exception">Exception</h2>
-<p>Analyzes exception handling structures defined in the PE file, helping to understand how runtime errors are managed.</p>
-<h2 id="relocation">Relocation</h2>
-<p>Lists relocation entries used during driver loading to fix addresses. Important for analyzing how the binary adapts to memory layout.</p>
-<h2 id="resources">Resources</h2>
-<p>Displays embedded resources, such as icons, version information, and other non-executable data. Useful for identifying branding and metadata.</p>
-<h2 id="file-header">File Header</h2>
-<p>Shows the COFF file header information including machine type, number of sections, characteristics, and timestamp. Essential for understanding the PE file layout.</p>
-<p><strong>Note:</strong> The Imports and Strings sections can be exported to various formats such as <strong>TXT</strong>, <strong>PDF</strong>, <strong>CSV</strong>, and <strong>JSON</strong>.</p>
+  <h1 id="download-driversentinel">Download DriverSentinel</h1>
+<p>Here you can download the latest version of <strong>DriverSentinel</strong>.</p>
+<h2 id="releases">Releases</h2>
+<ul>
+<li><a href="https://github.com/grzesiekkedzior/DriverSentinel/releases/download/Latest/DriverSentinel.zip" target="_blank">DriverSentinel v0.0.1 (ZIP)</a></li>
+</ul>
 
   
   <hr>
@@ -603,19 +569,7 @@ Additionally, it provides detailed information about the specific functions used
       <h4 id="contents"></h4>
       <nav id="TableOfContents">
   <ul>
-    <li><a href="#general-pe-section">General PE Section</a></li>
-    <li><a href="#certificate">Certificate</a></li>
-    <li><a href="#imports">Imports</a></li>
-    <li><a href="#strings">Strings</a></li>
-    <li><a href="#dos-header">DOS Header</a></li>
-    <li><a href="#optional-header">Optional Header</a></li>
-    <li><a href="#assembly">Assembly</a></li>
-    <li><a href="#rich-header">Rich Header</a></li>
-    <li><a href="#debug-info">Debug Info</a></li>
-    <li><a href="#exception">Exception</a></li>
-    <li><a href="#relocation">Relocation</a></li>
-    <li><a href="#resources">Resources</a></li>
-    <li><a href="#file-header">File Header</a></li>
+    <li><a href="#releases">Releases</a></li>
   </ul>
 </nav>
     </div>

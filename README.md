@@ -1,5 +1,5 @@
 # DRIVER SENTINEL
-### **Version 1.0.0 - beta**
+### **Version 0.0.1 - beta**
 
 **DriverSentinel** is a desktop application for analyzing and inspecting Windows driver files (**.sys**).  
 It allows users to quickly check general information, the Portable Executable (PE) structure, imported functions, and security-related data such as digital signatures.  
@@ -7,10 +7,7 @@ Additionally, it integrates a **disassembly engine** powered by **Capstone**, en
 
 The project is developed in **C++**, using the **Qt** framework for the graphical interface, **LIEF** for parsing the PE format, and **Capstone** for disassembly.
 ![Welcome Screen](https://github.com/user-attachments/assets/839515ca-b619-4e64-9764-eb5436be30d9)   
-![Section](https://github.com/user-attachments/assets/61be3085-be0c-4076-80c5-2a859fb51be8)   
-![Imports](https://github.com/user-attachments/assets/d2e04416-9a15-4b51-a8f2-af1b5ae8b4a8)   
-![Asm](https://github.com/user-attachments/assets/6dd0bbad-326a-4c6c-b5d0-9bc713d90452)   
-![Rsc](https://github.com/user-attachments/assets/34ec2e16-3a0c-4bcf-93fc-0b0857e4a512)   
+   
 
 ## Features
 

@@ -2,11 +2,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on </title>
-    <link>/</link>
+    <link>https://grzesiekkedzior.github.io/DriverSentinel/</link>
     <description>Recent content in Home on </description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate></lastBuildDate>
-    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://grzesiekkedzior.github.io/DriverSentinel/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

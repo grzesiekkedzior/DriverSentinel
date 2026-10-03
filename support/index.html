@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071018" data-theme-color>
+  <meta name="description" content="Ways to support DriverSentinel through testing, feedback, sharing and donations.">
+  <meta name="color-scheme" content="dark light">
+  <title>Support — DriverSentinel</title>
+  <link rel="icon" type="image/png" href="/DriverSentinel/images/logo.png">
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('driversentinel-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved === 'light' || saved === 'dark' ? saved : (systemDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch (_) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/DriverSentinel/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" data-header>
+  <div class="container nav-shell">
+    <a class="brand" href="/DriverSentinel/" aria-label="DriverSentinel home">
+      <img src="/DriverSentinel/images/logo.png" alt="" width="34" height="34">
+      <span>DriverSentinel</span>
+    </a>
+
+    <div class="nav-tools">
+      <nav id="site-nav" class="site-nav" aria-label="Primary navigation" data-nav>
+      <a href="/DriverSentinel/#features">Features</a>
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/download/">Download</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+        <a class="nav-github" href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+
+      <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme" data-theme-toggle>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">☀</span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">☾</span>
+      </button>
+
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <main id="main">
+    
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <p class="kicker">DriverSentinel</p>
+    <h1>Support</h1>
+    <p>Ways to support DriverSentinel through testing, feedback, sharing and donations.</p>
+  </div>
+</section>
+<section class="page-section">
+  <div class="container page-layout">
+    <article class="prose">
+      <h1 id="support-driversentinel">Support DriverSentinel</h1>
+<p>The most useful ways to support the project are to <strong>test it, report bugs and
+share technical feedback</strong>.</p>
+<h2 id="help-the-project">Help the project</h2>
+<ul>
+<li>⭐ Star the <a href="https://github.com/grzesiekkedzior/DriverSentinel">GitHub repository</a></li>
+<li>🐞 Report reproducible bugs through <a href="https://github.com/grzesiekkedzior/DriverSentinel/issues">GitHub Issues</a></li>
+<li>💡 Suggest improvements or additional PE-analysis features</li>
+<li>🧪 Test different PE files and report formats or structures that are not parsed correctly</li>
+<li>📂 Share the project with people interested in PE internals, reverse engineering and malware analysis</li>
+</ul>
+<h2 id="donate-via-paypal">Donate via PayPal</h2>
+<p>If you would like to support development financially:</p>
+<p><a href="https://www.paypal.com/donate/?hosted_button_id=MW4VMJ8YHSZF2"><img src="https://img.shields.io/badge/Donate%20via%20PayPal-00457C?logo=paypal&amp;logoColor=white&amp;style=for-the-badge" alt="Donate via PayPal"></a></p>
+<p>Or scan the QR code below:</p>
+<p><img src="https://github.com/user-attachments/assets/a9c86292-1220-4e7e-b7b2-6e7415075220" alt="PayPal QR Code"></p>
+<p>Thank you for helping improve DriverSentinel.</p>
+
+    </article>
+  </div>
+</section>
+
+  </main>
+  <footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand footer-brand" href="/DriverSentinel/">
+        <img src="/DriverSentinel/images/logo.png" alt="" width="32" height="32">
+        <span>DriverSentinel</span>
+      </a>
+      <p class="footer-copy">Static PE inspection, reverse engineering and binary analysis from a native C++/Qt interface.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+      <a href="/DriverSentinel/contributing/">Contributing</a>
+      <a href="/DriverSentinel/support/">Support</a>
+      <a href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>DriverSentinel 0.0.1-beta</span>
+    <span>Built with C++20 · Qt 6 · LIEF · Capstone</span>
+  </div>
+</footer>
+
+  <script src="/DriverSentinel/js/site.js" defer></script>
+</body>
+</html>

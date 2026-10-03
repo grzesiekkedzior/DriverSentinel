@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071018" data-theme-color>
+  <meta name="description" content="Current DriverSentinel capabilities, format validation status and planned development.">
+  <meta name="color-scheme" content="dark light">
+  <title>Roadmap — DriverSentinel</title>
+  <link rel="icon" type="image/png" href="/DriverSentinel/images/logo.png">
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('driversentinel-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved === 'light' || saved === 'dark' ? saved : (systemDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch (_) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/DriverSentinel/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" data-header>
+  <div class="container nav-shell">
+    <a class="brand" href="/DriverSentinel/" aria-label="DriverSentinel home">
+      <img src="/DriverSentinel/images/logo.png" alt="" width="34" height="34">
+      <span>DriverSentinel</span>
+    </a>
+
+    <div class="nav-tools">
+      <nav id="site-nav" class="site-nav" aria-label="Primary navigation" data-nav>
+      <a href="/DriverSentinel/#features">Features</a>
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/download/">Download</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+        <a class="nav-github" href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+
+      <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme" data-theme-toggle>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">☀</span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">☾</span>
+      </button>
+
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <main id="main">
+    
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <p class="kicker">DriverSentinel</p>
+    <h1>Roadmap</h1>
+    <p>Current DriverSentinel capabilities, format validation status and planned development.</p>
+  </div>
+</section>
+<section class="page-section">
+  <div class="container page-layout">
+    <article class="prose">
+      <h1 id="driversentinel-roadmap">DriverSentinel Roadmap</h1>
+<p>DriverSentinel is currently in <strong>0.0.1-beta</strong>. This page tracks completed PE
+inspection modules and the next areas planned for development.</p>
+<h2 id="available-now">Available now</h2>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <strong>General PE information</strong> — path, size, timestamps and version metadata</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Certificates</strong> — signer, issuer and certificate validity information</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Imports</strong> — imported DLLs and functions</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Strings</strong> — ASCII and Unicode extraction</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>DOS Header</strong> — legacy DOS header fields</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>File Header</strong> — COFF header information</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Optional Header</strong> — entry point, image base, subsystem and alignment</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Sections</strong> — section addresses, sizes and characteristics</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Disassembly</strong> — Capstone-based machine-code inspection</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Rich Header</strong> — Microsoft Rich Header information</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Debug information</strong> — PE Debug Directory data</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Exception information</strong> — exception-related PE structures</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Relocations</strong> — relocation blocks and entries</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Resources</strong> — embedded resources and metadata</li>
+<li><input checked="" disabled="" type="checkbox"> <strong>Export</strong> — Imports and Strings to TXT, PDF, CSV and JSON</li>
+</ul>
+<h2 id="format-validation">Format validation</h2>
+<p>Fully tested first:</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> <code>.exe</code></li>
+<li><input checked="" disabled="" type="checkbox"> <code>.dll</code></li>
+<li><input checked="" disabled="" type="checkbox"> <code>.sys</code></li>
+</ul>
+<p>Additional PE/COFF formats under validation:</p>
+<ul>
+<li><input disabled="" type="checkbox"> <code>.scr</code></li>
+<li><input disabled="" type="checkbox"> <code>.ocx</code></li>
+<li><input disabled="" type="checkbox"> <code>.efi</code></li>
+</ul>
+<p>These additional formats can already be parsed in at least some cases, but they
+are not yet considered fully validated.</p>
+<h2 id="planned">Planned</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Built-in hex viewer / editor</li>
+<li><input disabled="" type="checkbox"> Entropy measurement</li>
+<li><input disabled="" type="checkbox"> Extended PE heuristics and analysis</li>
+<li><input disabled="" type="checkbox"> Better validation of additional PE/COFF formats</li>
+<li><input disabled="" type="checkbox"> Additional reverse-engineering-oriented inspection features</li>
+</ul>
+<h2 id="contributing">Contributing</h2>
+<p>If you want to help with any roadmap item, see the
+<a href="/contributing/">Contributing Guide</a> or open an issue on
+<a href="https://github.com/grzesiekkedzior/DriverSentinel/issues">GitHub</a>.</p>
+
+    </article>
+  </div>
+</section>
+
+  </main>
+  <footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand footer-brand" href="/DriverSentinel/">
+        <img src="/DriverSentinel/images/logo.png" alt="" width="32" height="32">
+        <span>DriverSentinel</span>
+      </a>
+      <p class="footer-copy">Static PE inspection, reverse engineering and binary analysis from a native C++/Qt interface.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+      <a href="/DriverSentinel/contributing/">Contributing</a>
+      <a href="/DriverSentinel/support/">Support</a>
+      <a href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>DriverSentinel 0.0.1-beta</span>
+    <span>Built with C++20 · Qt 6 · LIEF · Capstone</span>
+  </div>
+</footer>
+
+  <script src="/DriverSentinel/js/site.js" defer></script>
+</body>
+</html>

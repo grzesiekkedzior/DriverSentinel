@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071018" data-theme-color>
+  <meta name="description" content="DriverSentinel is a C&#43;&#43;20/Qt desktop application for static analysis and inspection of Windows Portable Executable files.">
+  <meta name="color-scheme" content="dark light">
+  <title>Media — DriverSentinel</title>
+  <link rel="icon" type="image/png" href="/DriverSentinel/images/logo.png">
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('driversentinel-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved === 'light' || saved === 'dark' ? saved : (systemDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch (_) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/DriverSentinel/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" data-header>
+  <div class="container nav-shell">
+    <a class="brand" href="/DriverSentinel/" aria-label="DriverSentinel home">
+      <img src="/DriverSentinel/images/logo.png" alt="" width="34" height="34">
+      <span>DriverSentinel</span>
+    </a>
+
+    <div class="nav-tools">
+      <nav id="site-nav" class="site-nav" aria-label="Primary navigation" data-nav>
+      <a href="/DriverSentinel/#features">Features</a>
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/download/">Download</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+        <a class="nav-github" href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+
+      <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme" data-theme-toggle>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">☀</span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">☾</span>
+      </button>
+
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <main id="main">
+    
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <p class="kicker">DriverSentinel</p>
+    <h1>Media</h1>
+    
+  </div>
+</section>
+<section class="page-section">
+  <div class="container page-layout">
+    <article class="prose">
+      <h1 id="-media">📺 Media</h1>
+<p>A collection of screenshots and demo videos for <strong>DriverSentinel</strong>.</p>
+<h2 id="screenshots">Screenshots</h2>
+<p>Here you can find images showing different features of <strong>DriverSentinel</strong>.</p>
+<div class="gallery">
+  <div class="item">
+    <a href="/images/general.png" data-lightbox="media" data-title="General Info">
+      <img src="/images/general.png" alt="General Info">
+    </a>
+    <p>General Info</p>
+  </div>
+  <div class="item">
+    <a href="/images/certificate.png" data-lightbox="media" data-title="Certificate">
+      <img src="/images/certificate.png" alt="Certificate">
+    </a>
+    <p>Certificate</p>
+  </div>
+  <div class="item">
+    <a href="/images/imports.png" data-lightbox="media" data-title="Imports">
+      <img src="/images/imports.png" alt="Imports">
+    </a>
+    <p>Imports</p>
+  </div>
+  <div class="item">
+    <a href="/images/strings.png" data-lightbox="media" data-title="Strings">
+      <img src="/images/strings.png" alt="Strings">
+    </a>
+    <p>Strings</p>
+  </div>
+  <div class="item">
+    <a href="/images/dosheader.png" data-lightbox="media" data-title="DOS Header">
+      <img src="/images/dosheader.png" alt="DOS Header">
+    </a>
+    <p>DOS Header</p>
+  </div>
+  <div class="item">
+    <a href="/images/optional.png" data-lightbox="media" data-title="Optional Header">
+      <img src="/images/optional.png" alt="Optional Header">
+    </a>
+    <p>Optional Header</p>
+  </div>
+  <div class="item">
+    <a href="/images/asm.png" data-lightbox="media" data-title="Assembly">
+      <img src="/images/asm.png" alt="Assembly">
+    </a>
+    <p>Assembly</p>
+  </div>
+  <div class="item">
+    <a href="/images/rich.png" data-lightbox="media" data-title="Rich Header">
+      <img src="/images/rich.png" alt="Rich Header">
+    </a>
+    <p>Rich Header</p>
+  </div>
+  <div class="item">
+    <a href="/images/debug.png" data-lightbox="media" data-title="Debug Info">
+      <img src="/images/debug.png" alt="Debug Info">
+    </a>
+    <p>Debug Info</p>
+  </div>
+  <div class="item">
+    <a href="/images/exception.png" data-lightbox="media" data-title="Exception">
+      <img src="/images/exception.png" alt="Exception">
+    </a>
+    <p>Exception</p>
+  </div>
+  <div class="item">
+    <a href="/images/relocation.png" data-lightbox="media" data-title="Relocation">
+      <img src="/images/relocation.png" alt="Relocation">
+    </a>
+    <p>Relocation</p>
+  </div>
+  <div class="item">
+    <a href="/images/resources.png" data-lightbox="media" data-title="Resources">
+      <img src="/images/resources.png" alt="Resources">
+    </a>
+    <p>Resources</p>
+  </div>
+  <div class="item">
+    <a href="/images/file.png" data-lightbox="media" data-title="File Header">
+      <img src="/images/file.png" alt="File Header">
+    </a>
+    <p>File Header</p>
+  </div>
+  <div class="item">
+    <a href="/images/pesection.png" data-lightbox="media" data-title="PE Section">
+      <img src="/images/pesection.png" alt="PE Section">
+    </a>
+    <p>PE Section</p>
+  </div>
+</div>
+<!-- Lightbox CSS + JS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+<style>
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+.gallery .item {
+  text-align: center;
+}
+.gallery img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease-in-out;
+}
+.gallery img:hover {
+  transform: scale(1.05);
+}
+</style>
+
+    </article>
+  </div>
+</section>
+
+  </main>
+  <footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand footer-brand" href="/DriverSentinel/">
+        <img src="/DriverSentinel/images/logo.png" alt="" width="32" height="32">
+        <span>DriverSentinel</span>
+      </a>
+      <p class="footer-copy">Static PE inspection, reverse engineering and binary analysis from a native C++/Qt interface.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+      <a href="/DriverSentinel/contributing/">Contributing</a>
+      <a href="/DriverSentinel/support/">Support</a>
+      <a href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>DriverSentinel 0.0.1-beta</span>
+    <span>Built with C++20 · Qt 6 · LIEF · Capstone</span>
+  </div>
+</footer>
+
+  <script src="/DriverSentinel/js/site.js" defer></script>
+</body>
+</html>

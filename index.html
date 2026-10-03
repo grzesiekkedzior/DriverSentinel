@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta name="generator" content="Hugo 0.150.0">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071018" data-theme-color>
+  <meta name="description" content="DriverSentinel is a C&#43;&#43;20/Qt desktop application for static analysis and inspection of Windows Portable Executable files.">
+  <meta name="color-scheme" content="dark light">
+  <title>DriverSentinel — PE Analysis & Reverse Engineering</title>
+  <link rel="icon" type="image/png" href="/DriverSentinel/images/logo.png">
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('driversentinel-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved === 'light' || saved === 'dark' ? saved : (systemDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch (_) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/DriverSentinel/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" data-header>
+  <div class="container nav-shell">
+    <a class="brand" href="/DriverSentinel/" aria-label="DriverSentinel home">
+      <img src="/DriverSentinel/images/logo.png" alt="" width="34" height="34">
+      <span>DriverSentinel</span>
+    </a>
+
+    <div class="nav-tools">
+      <nav id="site-nav" class="site-nav" aria-label="Primary navigation" data-nav>
+      <a href="/DriverSentinel/#features">Features</a>
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/download/">Download</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+        <a class="nav-github" href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+
+      <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme" data-theme-toggle>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">☀</span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">☾</span>
+      </button>
+
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <main id="main">
+    
+<section class="hero">
+  <div class="hero-grid container">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="status-dot"></span> 0.0.1-beta · Windows PE static analysis</div>
+      <h1>See what is inside a <span>PE binary.</span></h1>
+      <p class="hero-lead">DriverSentinel is a native C++/Qt tool for inspecting Portable Executable files — headers, imports, sections, strings, certificates, resources, relocations and machine code in one interface.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="/DriverSentinel/download/">Download beta</a>
+        <a class="button button-secondary" href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">View on GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="stack-row" aria-label="Technology stack">
+        <span>C++20</span><span>Qt 6</span><span>LIEF</span><span>Capstone</span><span>CMake</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="window-glow"></div>
+      <figure class="app-window">
+        <div class="window-bar"><i></i><i></i><i></i><span>DriverSentinel</span></div>
+        <a href="/DriverSentinel/images/welcome.png" aria-label="Open DriverSentinel screenshot">
+          <img src="/DriverSentinel/images/welcome.png" alt="DriverSentinel desktop application showing PE analysis interface" width="815" height="545">
+        </a>
+      </figure>
+      <div class="floating-tag tag-one"><b>PE</b><span>Headers</span></div>
+      <div class="floating-tag tag-two"><b>x64</b><span>Disassembly</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="signal-strip" aria-label="Project highlights">
+  <div class="container signal-grid">
+    <div><strong>3</strong><span>validated PE types</span></div>
+    <div><strong>14+</strong><span>analysis modules</span></div>
+    <div><strong>4</strong><span>export formats</span></div>
+    <div><strong>100%</strong><span>native desktop UI</span></div>
+  </div>
+</section>
+
+<section class="section" id="formats">
+  <div class="container">
+    <div class="section-heading">
+      <div><p class="kicker">File compatibility</p><h2>PE first. Extension second.</h2></div>
+      <p>DriverSentinel focuses on the binary structure itself. The formats below are the ones currently validated most thoroughly.</p>
+    </div>
+
+    <div class="format-layout">
+      <div class="format-panel tested-panel">
+        <div class="panel-label"><span class="status status-tested"></span> Tested</div>
+        <div class="format-list">
+          <article><code>.exe</code><div><h3>Windows executable</h3><p>Regular user-mode PE applications.</p></div></article>
+          <article><code>.dll</code><div><h3>Dynamic-link library</h3><p>PE libraries, exports, imports and metadata.</p></div></article>
+          <article><code>.sys</code><div><h3>Kernel driver</h3><p>Windows driver binaries and PE structures.</p></div></article>
+        </div>
+      </div>
+      <div class="format-panel experimental-panel">
+        <div class="panel-label"><span class="status status-experimental"></span> Additional compatibility</div>
+        <div class="format-list compact">
+          <article><code>.scr</code><div><h3>Screen saver</h3><p>Parses as a PE executable.</p></div></article>
+          <article><code>.ocx</code><div><h3>ActiveX control</h3><p>PE-based COM/ActiveX binary.</p></div></article>
+          <article><code>.efi</code><div><h3>UEFI binary</h3><p>PE/COFF parsing works, but support is not fully validated.</p></div></article>
+        </div>
+      </div>
+    </div>
+    <p class="section-note">Additional formats can be parsed in at least some cases, but may expose limited or format-specific information. They are not yet considered fully validated.</p>
+  </div>
+</section>
+
+<section class="section section-alt" id="features">
+  <div class="container">
+    <div class="section-heading">
+      <div><p class="kicker">Analysis modules</p><h2>One interface. Multiple layers of a PE file.</h2></div>
+      <p>Move from high-level metadata to the structures and machine code that explain how the binary is built.</p>
+    </div>
+
+    <div class="feature-grid">
+      <article class="feature-card"><div class="feature-icon">01</div><h3>PE Headers</h3><p>DOS, COFF File Header and Optional Header with entry point, image base, subsystem and alignment.</p></article>
+      <article class="feature-card"><div class="feature-icon">02</div><h3>Imports</h3><p>Inspect imported DLLs, functions and dependencies used by the analyzed binary.</p></article>
+      <article class="feature-card"><div class="feature-icon">03</div><h3>Sections</h3><p>Review names, virtual addresses, sizes, permissions and PE characteristics.</p></article>
+      <article class="feature-card feature-accent"><div class="feature-icon">04</div><h3>Disassembly</h3><p>Inspect machine instructions directly in the UI using the Capstone disassembly engine.</p></article>
+      <article class="feature-card"><div class="feature-icon">05</div><h3>Strings</h3><p>Extract ASCII and Unicode strings useful during static analysis and initial triage.</p></article>
+      <article class="feature-card"><div class="feature-icon">06</div><h3>Certificates</h3><p>Inspect signer, issuer and validity information stored in digital signatures.</p></article>
+      <article class="feature-card"><div class="feature-icon">07</div><h3>Resources & Debug</h3><p>Explore embedded resources, version metadata, Debug Directory data and the Rich Header.</p></article>
+      <article class="feature-card"><div class="feature-icon">08</div><h3>Relocations & Exceptions</h3><p>Inspect relocation blocks and exception-related structures in the image.</p></article>
+    </div>
+    <div class="export-callout"><span>Export</span><p>Imports and Strings can be exported to <strong>TXT</strong>, <strong>PDF</strong>, <strong>CSV</strong> and <strong>JSON</strong>.</p></div>
+  </div>
+</section>
+
+<section class="section workflow-section">
+  <div class="container">
+    <div class="section-heading narrow"><div><p class="kicker">Workflow</p><h2>From file to low-level evidence.</h2></div></div>
+    <div class="workflow-grid">
+      <article><span>01</span><h3>Open a PE file</h3><p>Load an executable, DLL or driver and let LIEF parse the underlying PE structures.</p></article>
+      <article><span>02</span><h3>Inspect structure</h3><p>Navigate headers, sections, imports, resources, certificates and metadata.</p></article>
+      <article><span>03</span><h3>Follow evidence</h3><p>Use strings, dependencies, entry point and section properties to decide where to look next.</p></article>
+      <article><span>04</span><h3>Read machine code</h3><p>Move into Capstone-based disassembly when structural information is not enough.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container usecase-layout">
+    <div class="usecase-copy">
+      <p class="kicker">Use cases</p>
+      <h2>Built for learning, inspection and reverse engineering.</h2>
+      <p>DriverSentinel is a static-analysis aid. It is useful when you need a structured view of a PE file before moving to a debugger, sandbox or more specialized reverse-engineering workflow.</p>
+      <a class="text-link" href="/DriverSentinel/documentation/">Read the documentation <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="usecase-list">
+      <div><b>01</b><span><strong>PE inspection</strong><small>Understand file structure and metadata.</small></span></div>
+      <div><b>02</b><span><strong>Reverse engineering</strong><small>Connect PE structures with machine code.</small></span></div>
+      <div><b>03</b><span><strong>Malware analysis</strong><small>Perform initial static inspection in an isolated environment.</small></span></div>
+      <div><b>04</b><span><strong>Driver analysis</strong><small>Inspect Windows kernel driver binaries.</small></span></div>
+      <div><b>05</b><span><strong>Learning PE internals</strong><small>See how real binaries map to PE concepts.</small></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section architecture-section">
+  <div class="container architecture-grid">
+    <div>
+      <p class="kicker">Under the hood</p>
+      <h2>Native C++ architecture.</h2>
+      <p>DriverSentinel uses an MVC-like design that separates parsed data, Qt models and application logic. LIEF handles PE parsing while Capstone provides disassembly.</p>
+      <div class="architecture-stack"><span>C++20</span><span>Qt 6</span><span>LIEF</span><span>Capstone</span></div>
+      <a class="text-link" href="/DriverSentinel/documentation/">Explore architecture <span aria-hidden="true">→</span></a>
+    </div>
+    <figure class="architecture-card"><img src="/DriverSentinel/images/architecture.png" alt="Simplified DriverSentinel architecture diagram" width="779" height="632"></figure>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container cta-card">
+    <div><p class="kicker">0.0.1-beta</p><h2>Try DriverSentinel on your own PE files.</h2><p>The project is in beta. Test it, report parsing issues and help improve support for additional PE/COFF formats.</p></div>
+    <div class="cta-actions"><a class="button button-primary" href="/DriverSentinel/download/">Download beta</a><a class="button button-secondary" href="https://github.com/grzesiekkedzior/DriverSentinel/issues" target="_blank" rel="noopener">Report an issue</a></div>
+  </div>
+</section>
+
+  </main>
+  <footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand footer-brand" href="/DriverSentinel/">
+        <img src="/DriverSentinel/images/logo.png" alt="" width="32" height="32">
+        <span>DriverSentinel</span>
+      </a>
+      <p class="footer-copy">Static PE inspection, reverse engineering and binary analysis from a native C++/Qt interface.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+      <a href="/DriverSentinel/contributing/">Contributing</a>
+      <a href="/DriverSentinel/support/">Support</a>
+      <a href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>DriverSentinel 0.0.1-beta</span>
+    <span>Built with C++20 · Qt 6 · LIEF · Capstone</span>
+  </div>
+</footer>
+
+  <script src="/DriverSentinel/js/site.js" defer></script>
+</body>
+</html>

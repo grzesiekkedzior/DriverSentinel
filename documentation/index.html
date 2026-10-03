@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071018" data-theme-color>
+  <meta name="description" content="DriverSentinel modules, file compatibility, architecture and analysis notes.">
+  <meta name="color-scheme" content="dark light">
+  <title>Documentation — DriverSentinel</title>
+  <link rel="icon" type="image/png" href="/DriverSentinel/images/logo.png">
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('driversentinel-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved === 'light' || saved === 'dark' ? saved : (systemDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch (_) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/DriverSentinel/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" data-header>
+  <div class="container nav-shell">
+    <a class="brand" href="/DriverSentinel/" aria-label="DriverSentinel home">
+      <img src="/DriverSentinel/images/logo.png" alt="" width="34" height="34">
+      <span>DriverSentinel</span>
+    </a>
+
+    <div class="nav-tools">
+      <nav id="site-nav" class="site-nav" aria-label="Primary navigation" data-nav>
+      <a href="/DriverSentinel/#features">Features</a>
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/download/">Download</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+        <a class="nav-github" href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+
+      <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme" data-theme-toggle>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">☀</span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">☾</span>
+      </button>
+
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <main id="main">
+    
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <p class="kicker">DriverSentinel</p>
+    <h1>Documentation</h1>
+    <p>DriverSentinel modules, file compatibility, architecture and analysis notes.</p>
+  </div>
+</section>
+<section class="page-section">
+  <div class="container page-layout">
+    <article class="prose">
+      <h1 id="documentation">Documentation</h1>
+<p>DriverSentinel is a <strong>C++20 / Qt 6</strong> desktop application for static inspection
+of Portable Executable files. It uses <strong>LIEF</strong> to parse PE structures and
+<strong>Capstone</strong> for disassembly.</p>
+<h2 id="file-compatibility">File compatibility</h2>
+<p>The application has been tested primarily with:</p>
+<ul>
+<li><code>.exe</code> — Windows executables</li>
+<li><code>.dll</code> — dynamic-link libraries</li>
+<li><code>.sys</code> — Windows kernel drivers</li>
+</ul>
+<p>Other PE/COFF-based formats such as <code>.scr</code>, <code>.ocx</code> and <code>.efi</code> may also be
+compatible, but support for those formats has not yet been fully validated.</p>
+<h2 id="analysis-modules">Analysis modules</h2>
+<p>Current modules include:</p>
+<ul>
+<li>General file information</li>
+<li>DOS Header</li>
+<li>COFF File Header</li>
+<li>Optional Header</li>
+<li>Sections</li>
+<li>Imports and function information</li>
+<li>Strings</li>
+<li>Certificates</li>
+<li>Resources</li>
+<li>Relocations</li>
+<li>Exception information</li>
+<li>Debug information</li>
+<li>Rich Header</li>
+<li>Capstone-based disassembly</li>
+</ul>
+<p>The Imports and Strings views can be exported to <strong>TXT, PDF, CSV and JSON</strong>.</p>
+<hr>
+<h1 id="architecture-overview">Architecture Overview</h1>
+<p>DriverSentinel follows an <strong>MVC-like architecture</strong> with a clear separation
+between parsed data, Qt models, application logic and the main UI.</p>
+<h2 id="data">Data</h2>
+<p>Data structures store information extracted from the analyzed PE file. They are
+kept separate from presentation logic so the same parsed information can be
+consumed by models and controllers.</p>
+<h2 id="models">Models</h2>
+<p>Qt models expose structured data to table and tree views. Larger datasets are
+presented through model/view classes rather than being embedded directly in UI
+widgets.</p>
+<h2 id="controllers">Controllers</h2>
+<p>Controllers coordinate parsing, model updates and interaction with the user
+interface. Expensive operations can be moved away from the main GUI thread to
+keep the interface responsive.</p>
+<h2 id="utilities">Utilities</h2>
+<p>Shared helpers contain reusable operations such as formatting, conversions,
+export functions and binary-analysis support code.</p>
+<h2 id="mainwindow">MainWindow</h2>
+<p><code>MainWindow</code> coordinates the controllers and presents the individual analysis
+modules as a single desktop application.</p>
+<h2 id="simplified-architecture">Simplified architecture</h2>
+<p><img src="../images/architecture.png" alt="Application Architecture"></p>
+<hr>
+<h2 id="safety-note">Safety note</h2>
+<p>Unknown or potentially malicious binaries should be analyzed only in an
+appropriately isolated environment. DriverSentinel is a static-analysis aid,
+not a substitute for sandboxing or a complete malware-analysis environment.</p>
+
+    </article>
+  </div>
+</section>
+
+  </main>
+  <footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand footer-brand" href="/DriverSentinel/">
+        <img src="/DriverSentinel/images/logo.png" alt="" width="32" height="32">
+        <span>DriverSentinel</span>
+      </a>
+      <p class="footer-copy">Static PE inspection, reverse engineering and binary analysis from a native C++/Qt interface.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+      <a href="/DriverSentinel/contributing/">Contributing</a>
+      <a href="/DriverSentinel/support/">Support</a>
+      <a href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>DriverSentinel 0.0.1-beta</span>
+    <span>Built with C++20 · Qt 6 · LIEF · Capstone</span>
+  </div>
+</footer>
+
+  <script src="/DriverSentinel/js/site.js" defer></script>
+</body>
+</html>

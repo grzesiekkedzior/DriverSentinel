@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071018" data-theme-color>
+  <meta name="description" content="How to report bugs, propose features and contribute code or documentation to DriverSentinel.">
+  <meta name="color-scheme" content="dark light">
+  <title>Contributing — DriverSentinel</title>
+  <link rel="icon" type="image/png" href="/DriverSentinel/images/logo.png">
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem('driversentinel-theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved === 'light' || saved === 'dark' ? saved : (systemDark ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      } catch (_) {
+        document.documentElement.dataset.theme = 'dark';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="/DriverSentinel/css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" data-header>
+  <div class="container nav-shell">
+    <a class="brand" href="/DriverSentinel/" aria-label="DriverSentinel home">
+      <img src="/DriverSentinel/images/logo.png" alt="" width="34" height="34">
+      <span>DriverSentinel</span>
+    </a>
+
+    <div class="nav-tools">
+      <nav id="site-nav" class="site-nav" aria-label="Primary navigation" data-nav>
+      <a href="/DriverSentinel/#features">Features</a>
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/download/">Download</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+        <a class="nav-github" href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+
+      <button class="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme" data-theme-toggle>
+        <span class="theme-icon theme-icon-sun" aria-hidden="true">☀</span>
+        <span class="theme-icon theme-icon-moon" aria-hidden="true">☾</span>
+      </button>
+
+      <button class="nav-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <main id="main">
+    
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <p class="kicker">DriverSentinel</p>
+    <h1>Contributing</h1>
+    <p>How to report bugs, propose features and contribute code or documentation to DriverSentinel.</p>
+  </div>
+</section>
+<section class="page-section">
+  <div class="container page-layout">
+    <article class="prose">
+      <h1 id="-contributing-to-driversentinel">🤝 Contributing to DriverSentinel</h1>
+<p>First of all – thank you for considering contributing to <strong>DriverSentinel</strong>!<br>
+Every contribution is valuable, whether it’s code, documentation, testing, or simply reporting issues.</p>
+<hr>
+<h2 id="-ways-you-can-contribute">🛠 Ways You Can Contribute</h2>
+<ul>
+<li><strong>Report Bugs</strong>: Use <a href="https://github.com/grzesiekkedzior/DriverSentinel/issues">GitHub Issues</a> to describe problems clearly.</li>
+<li><strong>Suggest Features</strong>: Share your ideas for improvements or new functionality.</li>
+<li><strong>Improve Code</strong>: Submit pull requests with bug fixes or new features.</li>
+<li><strong>Enhance Documentation</strong>: Even small improvements are welcome.</li>
+<li><strong>Testing</strong>: Run the project, try new features, and share feedback.</li>
+</ul>
+<hr>
+<h2 id="-contribution-process">📌 Contribution Process</h2>
+<ol>
+<li><strong>Fork</strong> the repository.</li>
+<li><strong>Create a branch</strong> for your changes (<code>feature/...</code> or <code>fix/...</code>).</li>
+<li><strong>Commit</strong> with a clear and descriptive message.</li>
+<li><strong>Open a Pull Request</strong> – describe your changes and link to related issues if possible.</li>
+</ol>
+<hr>
+<h2 id="-code-guidelines">📐 Code Guidelines</h2>
+<ul>
+<li>Follow consistent naming and formatting conventions.</li>
+<li>Keep commits small and focused.</li>
+<li>Add tests if your contribution introduces new functionality.</li>
+<li>Ensure that your code builds without warnings or errors.</li>
+</ul>
+<hr>
+<h2 id="-code-structure-guidelines">🗂 Code Structure Guidelines</h2>
+<p>When adding new functionality to <strong>DriverSentinel</strong>, please keep the existing project structure consistent.<br>
+This ensures maintainability and makes it easier for others to contribute.</p>
+<hr>
+<h3 id="-general-rules">📌 General Rules</h3>
+<ul>
+<li>If the new feature requires <strong>displaying a larger, dynamic dataset</strong>, create a new <strong>tab with <code>QTableView</code></strong>.</li>
+<li>If the data is <strong>small and relatively static</strong>, you can use a simpler <strong><code>QTableWidget</code></strong>.</li>
+<li>Keep code separated into layers:
+<ul>
+<li><code>data/</code> → C++ structures that represent the data.</li>
+<li><code>model/</code> → Qt Models (<code>QAbstractTableModel</code> subclasses) that wrap the data.</li>
+<li><code>controller/</code> → Controllers that handle logic, communication with UI, and updating the models.</li>
+<li><code>ui/</code> → MainWindow and UI elements (tabs, tables, buttons).</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="-example-adding-exampledata">📂 Example: Adding <code>ExampleData</code></h3>
+<h4 id="1-data-layer-dataexampledatah">1. Data Layer (<code>data/ExampleData.h</code>)</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#pragma once
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">ExampleData</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> y;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> z;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h4 id="2-model-layer-modelexamplemodel">2. Model Layer (<code>model/ExampleModel</code>)</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#pragma once
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;QAbstractTableModel&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;data/ExampleData.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExampleModel</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> QAbstractTableModel {
+</span></span><span style="display:flex;"><span>    Q_OBJECT
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    ExampleModel(QObject <span style="color:#f92672">*</span>parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">enum</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Column</span> {
+</span></span><span style="display:flex;"><span>        X,
+</span></span><span style="display:flex;"><span>        Y,
+</span></span><span style="display:flex;"><span>        Z,
+</span></span><span style="display:flex;"><span>        Count
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">rowCount</span>(<span style="color:#66d9ef">const</span> QModelIndex <span style="color:#f92672">&amp;</span>parent <span style="color:#f92672">=</span> {}) <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">override</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">columnCount</span>(<span style="color:#66d9ef">const</span> QModelIndex <span style="color:#f92672">&amp;</span>parent <span style="color:#f92672">=</span> {}) <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">override</span>;
+</span></span><span style="display:flex;"><span>    QVariant <span style="color:#a6e22e">data</span>(<span style="color:#66d9ef">const</span> QModelIndex <span style="color:#f92672">&amp;</span>index, <span style="color:#66d9ef">int</span> role) <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">override</span>;
+</span></span><span style="display:flex;"><span>    QVariant <span style="color:#a6e22e">headerData</span>(<span style="color:#66d9ef">int</span> section, Qt<span style="color:#f92672">::</span>Orientation orientation, <span style="color:#66d9ef">int</span> role) <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">override</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setExampleData</span>(<span style="color:#66d9ef">const</span> QVector<span style="color:#f92672">&lt;</span>ExampleData<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>data);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clear</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    QVector<span style="color:#f92672">&lt;</span>ExampleData<span style="color:#f92672">&gt;</span> m_data;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h4 id="the-most-important-public-api-here-is">The most important public API here is:</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setExampleData</span>(<span style="color:#66d9ef">const</span> QVector<span style="color:#f92672">&lt;</span>ExampleData<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>data);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clear</span>();
+</span></span></code></pre></div><h4 id="3-controller-layer-controllerexamplecontrollerh">3. Controller Layer (<code>controller/ExampleController.h</code>)</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#pragma once
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;QObject&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;QSharedPointer&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;QTableView&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;model/ExampleModel.h&#34;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExampleController</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> QObject {
+</span></span><span style="display:flex;"><span>    Q_OBJECT
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    ExampleController(QSharedPointer<span style="color:#f92672">&lt;</span>ExampleData<span style="color:#f92672">&gt;</span> exampleData,
+</span></span><span style="display:flex;"><span>                      QTableView <span style="color:#f92672">*</span>mainTableView,
+</span></span><span style="display:flex;"><span>                      Ui<span style="color:#f92672">::</span>MainWindow <span style="color:#f92672">*</span>ui,
+</span></span><span style="display:flex;"><span>                      QObject <span style="color:#f92672">*</span>parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    QSharedPointer<span style="color:#f92672">&lt;</span>ExampleModel<span style="color:#f92672">&gt;</span> exampleModel() <span style="color:#66d9ef">const</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> slots:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> loadExampleDataToView(<span style="color:#66d9ef">const</span> QModelIndex <span style="color:#f92672">&amp;</span>index);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">updateModel</span>(<span style="color:#66d9ef">const</span> QVector<span style="color:#f92672">&lt;</span>ExampleData<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>data);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clear</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    QSharedPointer<span style="color:#f92672">&lt;</span>ExampleData<span style="color:#f92672">&gt;</span> m_exampleData;
+</span></span><span style="display:flex;"><span>    QSharedPointer<span style="color:#f92672">&lt;</span>ExampleModel<span style="color:#f92672">&gt;</span> m_exampleModel;
+</span></span><span style="display:flex;"><span>    QTableView <span style="color:#f92672">*</span>m_mainTableView{};
+</span></span><span style="display:flex;"><span>    Ui<span style="color:#f92672">::</span>MainWindow <span style="color:#f92672">*</span>m_ui;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><h4 id="the-core-logic-lives-in">The core logic lives in:</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loadExampleDataToView</span>(<span style="color:#66d9ef">const</span> QModelIndex <span style="color:#f92672">&amp;</span>index);
+</span></span></code></pre></div><h4 id="4-integration-in-mainwindow">4. Integration in MainWindow</h4>
+<h4 id="in-mainwindowstart-new-controllers-are-typically-set-up-like-this">In MainWindow::start(), new controllers are typically set up like this:</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>ExampleController <span style="color:#f92672">*</span>ec <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ExampleController{ui<span style="color:#f92672">-&gt;</span>exampleTable, <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>ui};
+</span></span><span style="display:flex;"><span>ui<span style="color:#f92672">-&gt;</span>exampleTable<span style="color:#f92672">-&gt;</span>setModel(ec<span style="color:#f92672">-&gt;</span>exampleModel().get());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>connect(dt, <span style="color:#f92672">&amp;</span>DriverToolbar<span style="color:#f92672">::</span>clearRequested, ec, <span style="color:#f92672">&amp;</span>ExampleController<span style="color:#f92672">::</span>clear);
+</span></span></code></pre></div><h2 id="-important">⚠️ Important:</h2>
+<ul>
+<li>
+<p>If loadExampleDataToView() requires heavy computations (e.g., parsing, crypto, large data processing),
+move its logic into a separate thread using QThread or QtConcurrent.
+This ensures that the UI remains responsive.</p>
+</li>
+<li>
+<p>In the controller, you may also add additional helper functions when needed (e.g., for formatting, conversions, or internal utilities). Keep them private unless they need to be exposed for testing or reuse.</p>
+</li>
+</ul>
+<hr>
+<h2 id="-project-architecture-simplified">🏗 Project Architecture (simplified)</h2>
+<p>DriverSentinel follows a <strong>Model–Controller–View</strong> architecture:<br>
+<img src="../images/architecture.png" alt="Application Architecture" title="DriverSentinel Architecture"></p>
+<hr>
+<h2 id="-planned-features">🚧 Planned Features</h2>
+<ul>
+<li>Hex editor for binary inspection.</li>
+<li>Entropy Measurement.</li>
+<li>Process tree visualization.</li>
+</ul>
+<hr>
+<h2 id="-discussions--support">💬 Discussions &amp; Support</h2>
+<ul>
+<li>Open an <a href="https://github.com/grzesiekkedzior/DriverSentinel/issues">Issue</a> for bugs and feature requests.</li>
+<li>Share your ideas or questions in Discussions.</li>
+</ul>
+<hr>
+<h3 id="-final-note">🙌 Final Note</h3>
+<p>Your contribution – no matter how small – helps make <strong>DriverSentinel</strong> better.<br>
+Thank you for your time, effort, and ideas!</p>
+
+    </article>
+  </div>
+</section>
+
+  </main>
+  <footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand footer-brand" href="/DriverSentinel/">
+        <img src="/DriverSentinel/images/logo.png" alt="" width="32" height="32">
+        <span>DriverSentinel</span>
+      </a>
+      <p class="footer-copy">Static PE inspection, reverse engineering and binary analysis from a native C++/Qt interface.</p>
+    </div>
+    <div class="footer-links">
+      <a href="/DriverSentinel/documentation/">Documentation</a>
+      <a href="/DriverSentinel/roadmap/">Roadmap</a>
+      <a href="/DriverSentinel/contributing/">Contributing</a>
+      <a href="/DriverSentinel/support/">Support</a>
+      <a href="https://github.com/grzesiekkedzior/DriverSentinel" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>DriverSentinel 0.0.1-beta</span>
+    <span>Built with C++20 · Qt 6 · LIEF · Capstone</span>
+  </div>
+</footer>
+
+  <script src="/DriverSentinel/js/site.js" defer></script>
+</body>
+</html>

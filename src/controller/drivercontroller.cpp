@@ -59,11 +59,11 @@ void DriverController::clear()
 
 void DriverController::openPEFile()
 {
-    QString selectedFile
-        = QFileDialog::getOpenFileName(nullptr,
-                                       tr("Select PE file"),
-                                       "",
-                                       tr("PE Files (*.exe *.dll *.sys);;All Files (*)"));
+    QString selectedFile = QFileDialog::getOpenFileName(
+        nullptr,
+        tr("Select PE file"),
+        "",
+        tr("PE Files (*.exe *.dll *.sys *.scr *.ocx *.efi);;All Files (*)"));
 
     if (selectedFile.isEmpty()) {
         return;

@@ -1,103 +1,297 @@
-# DRIVER SENTINEL
-### **Version 0.0.1 - beta**
-🌐 **Webpage:** [Driver Sentinel Homepage](https://grzesiekkedzior.github.io/DriverSentinel/)
+# DriverSentinel
 
-**DriverSentinel** is a desktop application for analyzing and inspecting Windows driver files (**.sys**).  
-It allows users to quickly check general information, the Portable Executable (PE) structure, imported functions, and security-related data such as digital signatures.  
-Additionally, it integrates a **disassembly engine** powered by **Capstone**, enabling low-level code inspection directly from the interface.
+### Version 0.0.1-beta
 
-The project is developed in **C++**, using the **Qt** framework for the graphical interface, **LIEF** for parsing the PE format, and **Capstone** for disassembly.
-![Welcome Screen](https://github.com/user-attachments/assets/839515ca-b619-4e64-9764-eb5436be30d9)   
-   
+🌐 **Webpage:** [DriverSentinel Homepage](https://grzesiekkedzior.github.io/DriverSentinel/)
+
+**DriverSentinel** is a desktop application for static analysis and inspection of
+Windows Portable Executable (PE) files.
+
+The application is designed to inspect PE structures, imports, sections,
+resources, certificates, strings, relocations, debug information and other
+binary metadata.
+
+DriverSentinel also integrates a **Capstone-based disassembly engine**, allowing
+low-level inspection of machine code directly from the graphical interface.
+
+The project is written in **C++20** and uses:
+
+- **Qt 6** for the graphical user interface
+- **LIEF** for parsing Portable Executable files
+- **Capstone** for disassembly
+
+![Welcome Screen](https://github.com/user-attachments/assets/839515ca-b619-4e64-9764-eb5436be30d9)
+
+---
+
+## Supported PE Formats
+
+DriverSentinel analyzes Windows PE files.
+
+It has been tested with:
+
+- `.exe` – Windows executables
+- `.dll` – Dynamic-link libraries
+- `.sys` – Windows kernel drivers
+
+Other PE/COFF-based formats may also be compatible, including:
+
+- `.scr` – Windows screen savers
+- `.ocx` – ActiveX controls
+- `.efi` – UEFI applications and modules
+
+Support for these additional formats has not yet been fully validated.
+Some information may be unavailable or displayed differently depending on the
+specific PE/COFF format.
+
+DriverSentinel identifies files based primarily on their PE structure rather
+than only on their file extension.
+
+---
 
 ## Features
 
-- **General Information**  
-  Displays basic metadata such as file path, size, timestamps, and version details.
+### General Information
 
-- **Certificates**  
-  Shows information about the driver’s digital signature: signer, issuer, and validity period.
+Displays general file information such as:
 
-- **Debug**  
-  Parses and displays debug-related data directories.
+- file path
+- file size
+- timestamps
+- version information
 
-- **Disassembler (Capstone)**  
-  Enables low-level inspection of machine code directly from the driver.
+### Certificates
 
-- **DOS Header**  
-  Displays details of the MS-DOS header at the beginning of the file.
+Displays information about digital signatures, including:
 
-- **Exception**  
-  Parses exception handling structures defined in the PE format.
+- signer
+- issuer
+- certificate validity period
 
-- **File Header**  
-  Shows COFF file header information such as machine type, number of sections, and characteristics.
+### Debug Information
 
-- **Function Info**  
-  Provides details about imported functions, DLL dependencies, and other related data.
+Parses and displays information stored in the PE Debug Directory.
 
-- **Optional Header**  
-  Displays fields from the optional header, including entry point, image base, and subsystem.
+### Disassembler
 
-- **Relocation**  
-  Lists relocation entries used for address fixing during driver loading.
+Uses **Capstone** to provide low-level inspection of machine code directly from
+the application.
 
-- **Resource**  
-  Displays embedded resources (icons, version info, etc.).
+### DOS Header
 
-- **Rich Header**  
-  Decodes and presents the hidden "Rich Header" often found in PE files.
+Displays information from the MS-DOS header located at the beginning of a PE
+file.
 
-- **Sections**  
-  Lists all PE sections with detailed information (name, virtual size, raw size, permissions).
+### Exception Information
 
-- **Strings**  
-  Extracts and displays ASCII and Unicode strings from the driver binary.   
+Parses exception handling structures stored in the PE Exception Directory.
 
-> **Disclaimer**  
-> DriverSentinel is currently in **beta**.  
-> The project may still contain bugs or incomplete features that have not yet been identified.  
-> Use it at your own risk and do not rely on it for production or critical security analysis.   
+### File Header
 
-### 💰 Donate via PayPal  
-You can support Project by sending a donation through PayPal:  
-[![Donate via PayPal](https://img.shields.io/badge/Donate%20via%20PayPal-00457C?logo=paypal&logoColor=white&style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=MW4VMJ8YHSZF2)
+Displays COFF File Header information, including:
 
-Or simply scan the QR code below:  
+- machine type
+- number of sections
+- characteristics
 
-![Kod QR](https://github.com/user-attachments/assets/a9c86292-1220-4e7e-b7b2-6e7415075220)
+### Function and Import Information
 
-### 🛠️ Other Ways to Support  
-If you can't donate, you can still help by:  
-- 🔍 Starring the project on GitHub to increase its visibility.  
-- 🐞 Providing feedback and reporting bugs to improve DriverSentinel.  
-- 📂 Sharing the app with friends and colleagues interested in reverse engineering.  
+Displays information about:
 
-Thank you for your support! 🧩🔐   
+- imported DLLs
+- imported functions
+- function metadata
 
-## Contributing
+### Optional Header
 
-Contributions are very welcome! 🎉  
-If you’d like to improve DriverSentinel, feel free to open issues, submit pull requests, or suggest new features.  
-Bug reports and code reviews are especially appreciated, since the project is still in beta and may contain issues I haven’t caught yet.  
+Displays important PE Optional Header fields, including:
+
+- entry point
+- image base
+- subsystem
+- alignment information
+
+### Relocations
+
+Displays relocation blocks and relocation entries used when an image cannot be
+loaded at its preferred base address.
+
+### Resources
+
+Displays embedded PE resources such as:
+
+- icons
+- version information
+- other resource entries
+
+### Rich Header
+
+Decodes and displays the undocumented Microsoft **Rich Header** commonly found
+in PE files produced by Microsoft development tools.
+
+### Sections
+
+Displays detailed information about PE sections, including:
+
+- section name
+- virtual address
+- virtual size
+- raw size
+- permissions and characteristics
+
+### Strings
+
+Extracts and displays ASCII and Unicode strings found inside the analyzed
+binary.
+
+---
+
+## Typical Use Cases
+
+DriverSentinel can be used for:
+
+- PE file inspection
+- Windows driver analysis
+- static binary analysis
+- reverse engineering
+- malware analysis
+- inspection of executable metadata
+- examining imports and dependencies
+- investigating suspicious PE files
+- learning the internal structure of Portable Executable files
+
+DriverSentinel is intended primarily as a static analysis and research tool.
+
+---
 
 ## Architecture
 
-DriverSentinel follows a clear **MVC-like structure**:
+DriverSentinel follows an **MVC-like architecture**:
 
-- **Data file** – stores and represents the raw driver information.  
-- **Model** – structures the parsed data for use in the UI.  
-- **Controller** – manages the logic, connects the model with the views, and handles parsing operations.  
-- **MainWindow** – loads and orchestrates controllers, providing the main interface for the user.  
+- **Data** – stores parsed information from the analyzed PE file
+- **Model** – exposes structured data to the graphical interface
+- **Controller** – performs parsing operations and connects models with views
+- **MainWindow** – coordinates controllers and provides the main user interface
 
 ```text
-┌──────────┐    ┌────────┐    ┌──────────┐    ┌────────────┐
-│ Data File│ →  │ Model  │ ↔  │Controller│ ↔  │MainWindow  │   
-└──────────┘    └────────┘    └──────────┘    └────────────┘
+┌───────────┐    ┌────────┐    ┌────────────┐    ┌────────────┐
+│   Data    │ →  │ Model  │ ↔  │ Controller │ ↔  │ MainWindow │
+└───────────┘    └────────┘    └────────────┘    └────────────┘
+```
+
+---
+
+## Requirements
+
+DriverSentinel currently uses:
+
+- C++20
+- Qt 6
+- LIEF
+- Capstone
+- CMake 3.16 or newer
+
+The application is currently developed primarily for Windows.
+
+---
+
+## Building
+
+Clone the repository:
+
+```bash
+git clone https://github.com/grzesiekkedzior/DriverSentinel.git
+cd DriverSentinel
+```
+
+Make sure that **Qt 6**, **LIEF** and **Capstone** are installed and available to
+CMake.
+
+Configure the project:
+
+```bash
+cmake -S . -B build
+```
+
+Build it:
+
+```bash
+cmake --build build
+```
+
+Depending on your environment, paths to **LIEF** and **Capstone** may need to be
+configured manually.
+
+The current CMake configuration has primarily been tested on Windows.
+
+---
 
 ## Planned Features
 
-- Hex Editor – a built-in viewer to inspect and edit the raw bytes of driver files.   
+Future development may include:
 
+- built-in Hex Editor for inspecting raw file bytes
+- extended PE analysis
+- additional reverse engineering features
+- improved support for additional PE/COFF-based formats
+- further malware-analysis-oriented inspection capabilities
 
+---
 
+## Disclaimer
+
+> **DriverSentinel is currently in beta.**
+>
+> The project may contain bugs, incomplete functionality or parsing errors.
+> Do not rely on DriverSentinel as the sole source of information for production
+> systems, incident response or critical security analysis.
+>
+> Unknown or potentially malicious files should only be analyzed in an
+> appropriately isolated environment.
+
+---
+
+## Contributing
+
+Contributions are welcome.
+
+If you would like to improve DriverSentinel, you can:
+
+- report bugs
+- suggest new features
+- open issues
+- submit pull requests
+- review existing code
+- improve documentation
+
+Bug reports and code reviews are especially useful while the project is still
+in beta.
+
+---
+
+## Support the Project
+
+If you find DriverSentinel useful, you can support the project by:
+
+- ⭐ starring the repository on GitHub
+- 🐞 reporting bugs
+- 💡 suggesting improvements
+- 📂 sharing the project with people interested in reverse engineering,
+  malware analysis or PE internals
+- contributing code or documentation
+
+### Donate via PayPal
+
+You can also support development through PayPal:
+
+[![Donate via PayPal](https://img.shields.io/badge/Donate%20via%20PayPal-00457C?logo=paypal&logoColor=white&style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=MW4VMJ8YHSZF2)
+
+Or scan the QR code:
+
+![PayPal QR Code](https://github.com/user-attachments/assets/a9c86292-1220-4e7e-b7b2-6e7415075220)
+
+---
+
+## License
+
+See the repository license for details.
